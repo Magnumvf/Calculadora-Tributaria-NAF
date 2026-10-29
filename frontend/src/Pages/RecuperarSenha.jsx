@@ -71,12 +71,16 @@ export default function RecuperarSenha() {
             className={`transition-all duration-[700ms] ease-out delay-[400ms]
               ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
           >
-            <label className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="recuperar-email" className="block mb-2 text-sm font-medium text-naf-blue">
               Email Cadastrado
             </label>
             <input
+              id="recuperar-email"
               type="email"
+              autoComplete="email"
               placeholder="Digite seu email"
+              aria-invalid={Boolean(error)}
+              aria-describedby="recuperar-email-error"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -84,7 +88,7 @@ export default function RecuperarSenha() {
               }}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            {error && <p className="mt-1 text-sm text-naf-red font-medium">{error}</p>}
+            <p id="recuperar-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-red font-medium">{error}</p>
           </div>
 
           <div

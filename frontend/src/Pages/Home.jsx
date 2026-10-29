@@ -138,19 +138,19 @@ export default function Home() {
                 A tributação da PF utiliza a tabela progressiva do IRPF. O sistema abate os seus <strong>custos mensais</strong> (despesas de livro caixa) da sua <strong>renda</strong>. O valor restante é a "Base de Cálculo", que é encaixada na tabela abaixo:
               </p>
               
-              <div className="overflow-x-auto rounded-xl border border-naf-gray/30">
+              <div className="hidden overflow-x-auto rounded-xl border border-naf-gray/30 md:block">
                 <table className="min-w-full text-xs text-gray-700">
                   <thead className="bg-naf-blue text-white">
                     <tr>
-                      <th className="py-2 px-3 text-left">Base (R$)</th>
-                      <th className="py-2 px-3 text-left">Alíquota</th>
-                      <th className="py-2 px-3 text-left">Deduzir (R$)</th>
+                      <th scope="col" className="py-2 px-3 text-left">Base (R$)</th>
+                      <th scope="col" className="py-2 px-3 text-left">Alíquota</th>
+                      <th scope="col" className="py-2 px-3 text-left">Deduzir (R$)</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr className="bg-gray-50 border-b border-naf-gray/20">
                       <td className="py-2 px-3">Até 2.428,80</td>
-                      <td className="py-2 px-3 font-semibold text-green-600">Isento</td>
+                      <td className="py-2 px-3 font-semibold text-green-700">Isento</td>
                       <td className="py-2 px-3">—</td>
                     </tr>
                     <tr className="border-b border-naf-gray/20">
@@ -176,6 +176,28 @@ export default function Home() {
                   </tbody>
                 </table>
               </div>
+              <dl className="divide-y divide-naf-gray/20 rounded-xl border border-naf-gray/30 px-4 md:hidden">
+                <div className="py-3">
+                  <dt className="font-medium">Até R$ 2.428,80</dt>
+                  <dd>Isento; dedução: —</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="font-medium">R$ 2.428,81 a R$ 2.826,65</dt>
+                  <dd>Alíquota: 7,5%; dedução: R$ 182,16</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="font-medium">R$ 2.826,66 a R$ 3.751,05</dt>
+                  <dd>Alíquota: 15%; dedução: R$ 394,16</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="font-medium">R$ 3.751,06 a R$ 4.664,68</dt>
+                  <dd>Alíquota: 22,5%; dedução: R$ 675,49</dd>
+                </div>
+                <div className="py-3">
+                  <dt className="font-medium">Acima de R$ 4.664,68</dt>
+                  <dd>Alíquota: 27,5%; dedução: R$ 908,73</dd>
+                </div>
+              </dl>
             </div>
 
             <div>
@@ -211,10 +233,12 @@ export default function Home() {
           <form onSubmit={handleSubmit} className="space-y-4 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-naf-blue mb-1">Nome Completo</label>
+                <label htmlFor="contato-nome" className="block text-sm font-medium text-naf-blue mb-1">Nome Completo</label>
                 <input
+                  id="contato-nome"
                   type="text"
                   name="nome"
+                  autoComplete="name"
                   value={formData.nome}
                   onChange={handleChange}
                   required
@@ -222,10 +246,12 @@ export default function Home() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-naf-blue mb-1">E-mail</label>
+                <label htmlFor="contato-email" className="block text-sm font-medium text-naf-blue mb-1">E-mail</label>
                 <input
+                  id="contato-email"
                   type="email"
                   name="email"
+                  autoComplete="email"
                   value={formData.email}
                   onChange={handleChange}
                   required
@@ -234,8 +260,9 @@ export default function Home() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-naf-blue mb-1">Sua Mensagem / Dúvida</label>
+              <label htmlFor="contato-mensagem" className="block text-sm font-medium text-naf-blue mb-1">Sua Mensagem / Dúvida</label>
               <textarea
+                id="contato-mensagem"
                 name="mensagem"
                 value={formData.mensagem}
                 onChange={handleChange}

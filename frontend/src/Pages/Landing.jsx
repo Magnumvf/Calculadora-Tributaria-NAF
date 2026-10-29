@@ -55,7 +55,7 @@ export default function Landing() {
               Pare de perder dinheiro para o Leão. <br />
               <span className="text-naf-red">Simule seus impostos em segundos.</span>
             </h1>
-            <p className="text-lg md:text-xl text-naf-gray mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-[#B2B2B2] mb-10 max-w-2xl mx-auto">
               Nossa calculadora inteligente ajuda profissionais autônomos a compararem os encargos entre Pessoa Física e Pessoa Jurídica para tomar a melhor decisão financeira.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -88,8 +88,11 @@ export default function Landing() {
                   className="bg-white border border-naf-gray/20 rounded-2xl shadow-sm overflow-hidden transition-all duration-300"
                 >
                   <button
+                    type="button"
+                    aria-expanded={faqAberto === index}
+                    aria-controls={`faq-answer-${index}`}
                     onClick={() => toggleFaq(index)}
-                    className="w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-gray-50 transition cursor-pointer"
+                    className="w-full flex justify-between items-center p-6 text-left hover:bg-gray-50 transition cursor-pointer"
                   >
                     <span className="font-bold text-naf-blue text-lg">{faq.pergunta}</span>
                     <svg 
@@ -100,8 +103,10 @@ export default function Landing() {
                     </svg>
                   </button>
                   
-                  <div 
-                    className={`px-6 text-gray-700 text-sm md:text-base leading-relaxed overflow-hidden transition-all duration-300 ease-in-out ${faqAberto === index ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
+                  <div
+                    id={`faq-answer-${index}`}
+                    hidden={faqAberto !== index}
+                    className={`px-6 text-gray-700 text-sm md:text-base leading-relaxed overflow-hidden transition-all duration-300 ease-in-out ${faqAberto === index ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
                   >
                     {faq.resposta}
                   </div>

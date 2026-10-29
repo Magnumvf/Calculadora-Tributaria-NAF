@@ -107,8 +107,8 @@ function CalculoPF() {
 
           <div className="space-y-4">
             <div className={`transition-all duration-[700ms] ease-out delay-[500ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
-              <label className="block mb-1 text-sm font-medium text-naf-blue">Profissão</label>
-              <select value={profissao} onChange={(e) => setProfissao(e.target.value)} className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out">
+              <label htmlFor="pf-profissao" className="block mb-1 text-sm font-medium text-naf-blue">Profissão</label>
+              <select id="pf-profissao" value={profissao} onChange={(e) => setProfissao(e.target.value)} className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out">
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
                 <option value="advogado">Advogado(a)</option>
@@ -117,41 +117,41 @@ function CalculoPF() {
 
             <div className={`transition-all duration-[700ms] ease-out delay-[600ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
               <div className="relative flex items-center gap-1 mb-1">
-                <label className="text-sm font-medium text-naf-blue">Renda Mensal Bruta (R$)</label>
-                <button type="button" className="text-naf-gray hover:text-naf-blue focus:outline-none" onMouseEnter={() => setShowTooltipRenda(true)} onMouseLeave={() => setShowTooltipRenda(false)}>
+                <label htmlFor="pf-renda" className="text-sm font-medium text-naf-blue">Renda Mensal Bruta (R$)</label>
+                <button type="button" aria-label="Ajuda sobre renda mensal bruta" aria-expanded={showTooltipRenda} aria-describedby={showTooltipRenda ? "pf-renda-help" : undefined} className="text-naf-gray hover:text-naf-blue focus:outline-none" onFocus={() => setShowTooltipRenda(true)} onBlur={() => setShowTooltipRenda(false)} onMouseEnter={() => setShowTooltipRenda(true)} onMouseLeave={() => setShowTooltipRenda(false)}>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                 </button>
                 {showTooltipRenda && (
-                  <div className="absolute z-10 w-64 p-3 text-sm text-white bg-naf-blue rounded-xl shadow-lg -top-2 left-full ml-2 border border-naf-gray/30">
+                  <div id="pf-renda-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-5rem)] p-3 text-sm text-white bg-naf-blue rounded-xl shadow-lg top-full left-0 mt-2 border border-naf-gray/30">
                     É o valor total que você espera receber por mês com o seu trabalho, antes de qualquer desconto.
                   </div>
                 )}
               </div>
-              <input type="number" value={renda} onChange={handleRendaChange} max="15000" placeholder="Ex: 3000" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm" />
-              {erro && <p className="text-naf-red text-sm mt-1 font-medium">{erro}</p>}
+              <input id="pf-renda" type="number" value={renda} onChange={handleRendaChange} max="15000" placeholder="Ex: 3000" aria-invalid={Boolean(erro)} aria-describedby="pf-renda-error" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm" />
+              <p id="pf-renda-error" aria-live="polite" className="text-naf-red text-sm mt-1 min-h-5 font-medium">{erro}</p>
             </div>
 
             <div className={`transition-all duration-[700ms] ease-out delay-[700ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
               <div className="relative flex items-center gap-1 mb-1">
-                <label className="text-sm font-medium text-naf-blue">Despesas Dedutíveis (Livro Caixa)</label>
-                <button type="button" className="text-naf-gray hover:text-naf-blue focus:outline-none" onMouseEnter={() => setShowTooltipCustos(true)} onMouseLeave={() => setShowTooltipCustos(false)}>
+                <label htmlFor="pf-custos" className="text-sm font-medium text-naf-blue">Despesas Dedutíveis (Livro Caixa)</label>
+                <button type="button" aria-label="Ajuda sobre despesas dedutíveis" aria-expanded={showTooltipCustos} aria-describedby={showTooltipCustos ? "pf-custos-help" : undefined} className="text-naf-gray hover:text-naf-blue focus:outline-none" onFocus={() => setShowTooltipCustos(true)} onBlur={() => setShowTooltipCustos(false)} onMouseEnter={() => setShowTooltipCustos(true)} onMouseLeave={() => setShowTooltipCustos(false)}>
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                   </svg>
                 </button>
                 {showTooltipCustos && (
-                  <div className="absolute z-10 w-64 p-3 text-sm text-white bg-naf-blue rounded-xl shadow-lg -top-2 left-full ml-2 border border-naf-gray/30">
+                  <div id="pf-custos-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-5rem)] p-3 text-sm text-white bg-naf-blue rounded-xl shadow-lg top-full left-0 mt-2 border border-naf-gray/30">
                     São os gastos essenciais para o seu trabalho acontecer (ex: aluguel de consultório/escritório, internet, energia). Eles reduzem a base de cálculo do imposto.
                   </div>
                 )}
               </div>
-              <input type="number" value={custos} onChange={(e) => setCustos(e.target.value)} placeholder="Ex: 750" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm" />
+              <input id="pf-custos" type="number" value={custos} onChange={(e) => setCustos(e.target.value)} placeholder="Ex: 750" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm" />
             </div>
 
             <div className={`transition-all duration-[700ms] ease-out delay-[900ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}>
-              <button onClick={calcularIRPF} className="w-full bg-naf-blue text-white font-bold py-3 rounded-xl hover:bg-[#0c1825] hover:scale-105 transition-all duration-[400ms] ease-out shadow-md">
+              <button type="button" onClick={calcularIRPF} className="w-full bg-naf-blue text-white font-bold py-3 rounded-xl hover:bg-[#0c1825] hover:scale-105 transition-all duration-[400ms] ease-out shadow-md">
                 Calcular
               </button>
             </div>
@@ -159,7 +159,7 @@ function CalculoPF() {
             {resultado && (
               <div className={`bg-gray-50 border border-naf-gray/20 rounded-xl shadow-inner mt-4 p-5 transition-all duration-[400ms] ease-out ${isVisible ? "opacity-100" : "opacity-0"}`}>
                 {typeof resultado === "string" ? (
-                  <p className="text-naf-red font-medium">{resultado}</p>
+                  <p role="alert" aria-live="assertive" className="text-naf-red font-medium">{resultado}</p>
                 ) : (
                   <>
                     <div className="space-y-2 text-sm text-naf-blue">
@@ -180,12 +180,13 @@ function CalculoPF() {
 
                       {mostrarEmail && (
                         <div className="mt-4 space-y-3">
-                          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Digite seu e-mail" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none text-sm" />
-                          <button onClick={enviarEmail} className="w-full bg-naf-red text-white py-2 rounded-xl hover:bg-[#a62b18] transition text-sm font-bold shadow-sm">Enviar resultados</button>
+                          <label htmlFor="pf-email" className="block text-sm font-medium text-naf-blue">E-mail para envio</label>
+                          <input id="pf-email" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setMensagemEnvio(""); }} placeholder="Digite seu e-mail" aria-invalid={mensagemEnvio.startsWith("Por favor")} aria-describedby="pf-email-message" className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none text-sm" />
+                          <button type="button" onClick={enviarEmail} className="w-full bg-naf-red text-white py-2 rounded-xl hover:bg-[#a62b18] transition text-sm font-bold shadow-sm">Enviar resultados</button>
                         </div>
                       )}
 
-                      {mensagemEnvio && <p className="text-green-600 mt-3 text-sm font-bold text-center">{mensagemEnvio}</p>}
+                      <p id="pf-email-message" role="status" aria-live="polite" className={`mt-3 text-sm font-bold text-center ${mensagemEnvio.startsWith("Por favor") ? "text-naf-red" : "text-green-700"}`}>{mensagemEnvio}</p>
                     </div>
                   </>
                 )}

@@ -8,7 +8,7 @@ export default function Footer() {
         {/* Créditos do Projeto */}
         <div className="text-center md:text-left">
           <h3 className="font-bold text-lg mb-1 tracking-wide">Calculadora Tributária NAF</h3>
-          <p className="text-sm text-naf-gray">
+          <p className="text-sm text-[#B2B2B2]">
             Desenvolvido por <span className="font-medium text-white">Alisson Almeida de Oliveira</span>
           </p>
         </div>
@@ -19,7 +19,7 @@ export default function Footer() {
             href="https://unichristus.edu.br/" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hover:text-naf-red transition-colors duration-300"
+            className="hover:text-white transition-colors duration-300"
           >
             Portal Unichristus
           </a>
@@ -27,7 +27,7 @@ export default function Footer() {
             href="https://www.instagram.com/naf.unichristus/" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hover:text-naf-red transition-colors duration-300"
+            className="hover:text-white transition-colors duration-300"
           >
             Instagram do NAF
           </a>
@@ -35,7 +35,7 @@ export default function Footer() {
             href="https://www.gov.br/receitafederal/pt-br" 
             target="_blank" 
             rel="noopener noreferrer" 
-            className="hover:text-naf-red transition-colors duration-300"
+            className="hover:text-white transition-colors duration-300"
           >
             Receita Federal
           </a>

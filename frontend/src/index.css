@@ -1,8 +1,33 @@
 @import "tailwindcss";
 
 @theme {
-  --color-naf-red: #CD371F;
+  --color-naf-red: #C3321D;
   --color-naf-blue: #132436;
-  --color-naf-gray: #B2B2B2;
+  --color-naf-gray: #5B6670;
   --color-naf-light: #EFEFEF;
+}
+
+:focus-visible {
+  outline: 3px solid #CD371F;
+  outline-offset: 3px;
+}
+
+nav :focus-visible,
+footer :focus-visible {
+  outline-color: #FFFFFF;
+}
+
+.opacity-0:focus-within {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

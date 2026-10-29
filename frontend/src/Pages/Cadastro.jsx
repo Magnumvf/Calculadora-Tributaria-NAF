@@ -87,19 +87,21 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-name" className="block mb-1 text-sm font-medium text-naf-blue">
               Nome Completo
             </label>
             <input
+              id="cadastro-name"
               type="text"
+              autoComplete="name"
               placeholder="Digite seu nome"
+              aria-invalid={Boolean(errors.name)}
+              aria-describedby="cadastro-name-error"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            {errors.name && (
-              <p className="mt-1 text-xs text-naf-red font-medium">{errors.name}</p>
-            )}
+            <p id="cadastro-name-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.name}</p>
           </div>
 
           <div
@@ -107,19 +109,21 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-email" className="block mb-1 text-sm font-medium text-naf-blue">
               Email
             </label>
             <input
+              id="cadastro-email"
               type="email"
+              autoComplete="email"
               placeholder="Digite seu email"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby="cadastro-email-error"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            {errors.email && (
-              <p className="mt-1 text-xs text-naf-red font-medium">{errors.email}</p>
-            )}
+            <p id="cadastro-email-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.email}</p>
           </div>
 
           <div
@@ -127,19 +131,21 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-password" className="block mb-1 text-sm font-medium text-naf-blue">
               Senha
             </label>
             <input
+              id="cadastro-password"
               type="password"
+              autoComplete="new-password"
               placeholder="Crie uma senha segura"
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby="cadastro-password-error"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            {errors.password && (
-              <p className="mt-1 text-xs text-naf-red font-medium">{errors.password}</p>
-            )}
+            <p id="cadastro-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.password}</p>
           </div>
 
           <div
@@ -147,21 +153,23 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-confirm-password" className="block mb-1 text-sm font-medium text-naf-blue">
               Confirmar Senha
             </label>
             <input
+              id="cadastro-confirm-password"
               type="password"
+              autoComplete="new-password"
               placeholder="Repita a senha"
+              aria-invalid={Boolean(errors.confirmPassword)}
+              aria-describedby="cadastro-confirm-password-error"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            {errors.confirmPassword && (
-              <p className="mt-1 text-xs text-naf-red font-medium">
-                {errors.confirmPassword}
-              </p>
-            )}
+            <p id="cadastro-confirm-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">
+              {errors.confirmPassword}
+            </p>
           </div>
 
           <div
