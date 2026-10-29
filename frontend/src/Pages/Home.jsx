@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 export default function Home() {
@@ -41,7 +40,7 @@ export default function Home() {
     setEnviando(true);
 
     try {
-      const response = await fetch('http://localhost:3000/send-email', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/send-email`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
@@ -64,7 +63,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen bg-naf-light">
-      <Navbar />
 
       <main className="flex-grow flex flex-col items-center py-10 px-4 md:px-6">
         
