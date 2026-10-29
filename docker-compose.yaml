@@ -12,6 +12,7 @@ services:
       - /app/node_modules
     environment:
       - WATCHPACK_POLLING=true
+      - VITE_API_URL=http://localhost:${BACKEND_PORT}
     depends_on:
       - backend
 
@@ -21,7 +22,7 @@ services:
       dockerfile: Dockerfile
     command: ["sh", "./start.sh"]
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "${BACKEND_PORT}:3000"
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -35,8 +36,6 @@ services:
 
   database:
     image: postgres:18.4-alpine
-    ports:
-      - "${DATABASE_PORT}:${DATABASE_PORT}"
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
