@@ -3,6 +3,10 @@ import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import api from "../services/api";
+import GraficoComparativo from "../components/GraficoComparativo";
+
+const formatarMoeda = (valor) => valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+const nomesProfissao = { psicologo: "Psicólogo(a)", arquiteto: "Arquiteto(a)", advogado: "Advogado(a)" };
 
 export default function Comparativo() {
   const [renda, setRenda] = useState("");
@@ -18,6 +22,7 @@ export default function Comparativo() {
   const [email, setEmail] = useState("");
   const [mensagemEnvio, setMensagemEnvio] = useState("");
   const [gerandoPdf, setGerandoPdf] = useState(false);
+  const [dataGeracaoPdf, setDataGeracaoPdf] = useState("");
 
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
@@ -109,6 +114,7 @@ export default function Comparativo() {
 
   const gerarPDF = async () => {
     setGerandoPdf(true);
+    setDataGeracaoPdf(new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date()));
     const elemento = document.getElementById("resultado-comparativo");
     
     if (!elemento) {
@@ -118,12 +124,14 @@ export default function Comparativo() {
     }
 
     try {
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
       const opcoes = {
         margin:       10,
         filename:     `Comparativo_Tributario_${profissao}.pdf`,
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true }, 
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak:    { mode: ["css", "legacy"], avoid: ["tr"] }
       };
 
       await html2pdf().set(opcoes).from(elemento).save();
@@ -225,10 +233,24 @@ export default function Comparativo() {
           ) : resultado && (
             <div className="border-t border-gray-200 bg-gray-50 rounded-b-3xl">
               <div id="resultado-comparativo" className="p-6 md:p-8 bg-[#ffffff]">
+                <header className="mb-6 border-b-2 border-[#132436] pb-4 text-center">
+                  <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#CD371F]">NAF — Núcleo de Apoio Contábil e Fiscal</p>
+                  <p className="mt-1 text-sm font-bold text-[#132436]">Universidade Christus</p>
+                  <h2 className="mt-4 text-xl font-bold text-[#132436]">Relatório Comparativo de Tributação — Pessoa Física x Pessoa Jurídica</h2>
+                  <p className="mt-2 text-xs text-gray-500">Relatório gerado em: {dataGeracaoPdf || "data e hora registradas ao baixar o PDF"}</p>
+                </header>
+
+                <section className="mb-6 rounded-xl bg-gray-50 p-4" style={{ breakInside: "avoid" }}>
+                  <h3 className="mb-2 font-bold text-[#132436]">Dados da simulação</h3>
+                  <p className="text-sm text-gray-700">Profissão: {nomesProfissao[profissao] || profissao}</p>
+                  <p className="text-sm text-gray-700">Renda/faturamento mensal: {formatarMoeda(Number(renda))}</p>
+                  <p className="text-sm text-gray-700">Custos dedutíveis informados: {formatarMoeda(Number(custos))}</p>
+                </section>
+
                 <div className="mb-8 p-6 rounded-2xl border-2 text-center shadow-sm" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#3b82f6', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#f0fdf4' : '#eff6ff' }}>
                   <h3 className="text-xl font-bold text-[#1f2937] mb-1">A melhor opção para você é:</h3>
                   <p className="text-3xl font-extrabold mb-2" style={{ color: resultado.siglaVencedora === 'PJ' ? '#16a34a' : '#2563eb' }}>{resultado.maisVantajoso}</p>
-                  <p className="text-[#374151] font-medium">Atuando como {resultado.siglaVencedora}, você tem uma <span className="font-bold underline decoration-2">economia de R$ {resultado.diferenca.toFixed(2)}</span> todos os meses.</p>
+                  <p className="text-[#374151] font-medium">Diferença entre os valores: <span className="font-bold">{formatarMoeda(resultado.diferenca)}</span> por mês. Atuando como {resultado.siglaVencedora}, essa é sua economia mensal.</p>
                 </div>
 
                 <h4 className="text-center font-bold text-[#132436] mb-4 uppercase tracking-wider text-sm">Resumo Detalhado dos Cálculos</h4>
@@ -253,6 +275,37 @@ export default function Comparativo() {
                     <div className="mt-5 pt-3 border-t border-[#e5e7eb] flex justify-between items-end"><span className="font-bold text-[#132436]">Custo Mensal:</span><span className="text-2xl font-black text-[#CD371F]">R$ {resultado.pj.total.toFixed(2)}</span></div>
                   </div>
                 </div>
+
+                <section className="mt-6" style={{ breakInside: "avoid" }}>
+                  <GraficoComparativo impostoPF={resultado.pf.imposto} impostoPJ={resultado.pj.total} />
+                </section>
+
+                <section className="mt-8">
+                  <h3 className="mb-3 border-b border-gray-300 pb-2 text-lg font-bold text-[#132436]">Memória de Cálculo</h3>
+                  <p className="mb-4 text-xs text-gray-600">Detalhamento baseado nos valores e parâmetros disponíveis nesta simulação.</p>
+                  <h4 className="mb-2 font-bold text-[#132436]">Pessoa Física (PF)</h4>
+                  <div className="mb-5 overflow-hidden rounded-lg border border-gray-300">
+                    <table className="w-full border-collapse text-left text-xs">
+                      <thead className="bg-gray-100"><tr><th className="p-2">Tributo</th><th className="p-2">Base de cálculo</th><th className="p-2">Alíquota/faixa</th><th className="p-2">Valor calculado</th></tr></thead>
+                      <tbody><tr className="border-t border-gray-200"><td className="p-2">IRPF</td><td className="p-2">{formatarMoeda(resultado.pf.base)}</td><td className="p-2">{resultado.pf.faixa}{resultado.pf.parcelaDedutivel ? ` (parcela a deduzir: ${formatarMoeda(resultado.pf.parcelaDedutivel)})` : ""}</td><td className="p-2">{formatarMoeda(resultado.pf.imposto)}</td></tr></tbody>
+                    </table>
+                  </div>
+                  <h4 className="mb-2 font-bold text-[#132436]">Pessoa Jurídica (PJ)</h4>
+                  <div className="overflow-hidden rounded-lg border border-gray-300">
+                    <table className="w-full border-collapse text-left text-xs">
+                      <thead className="bg-gray-100"><tr><th className="p-2">Tributo</th><th className="p-2">Base de cálculo</th><th className="p-2">Alíquota</th><th className="p-2">Valor calculado</th></tr></thead>
+                      <tbody>
+                        <tr className="border-t border-gray-200"><td className="p-2">Simples Nacional</td><td className="p-2">{formatarMoeda(Number(renda))}</td><td className="p-2">{resultado.pj.aliquota}</td><td className="p-2">{formatarMoeda(resultado.pj.simples)}</td></tr>
+                        <tr className="border-t border-gray-200"><td className="p-2">INSS sobre pró-labore</td><td className="p-2">{formatarMoeda(resultado.pj.salarioBase)}</td><td className="p-2">11%</td><td className="p-2">{formatarMoeda(resultado.pj.inss)}</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <p className="mt-3 text-xs text-gray-600">A aplicação não disponibiliza neste resultado uma memória adicional de faixas progressivas ou outros componentes além dos itens listados.</p>
+                </section>
+
+                <footer className="mt-8 border-t border-gray-300 pt-4 text-xs leading-relaxed text-gray-600" style={{ breakInside: "avoid" }}>
+                  <p><strong>Estimativa:</strong> Os valores apresentados neste relatório são estimativas calculadas com base nas informações fornecidas pelo usuário e nas regras consideradas pela aplicação. Este documento possui finalidade informativa e não substitui uma análise contábil ou orientação profissional individualizada.</p>
+                </footer>
               </div>
 
               <div className="px-6 md:px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-200">
