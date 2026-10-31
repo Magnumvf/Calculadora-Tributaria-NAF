@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 export default function RecuperarSenha() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [confirmacao, setConfirmacao] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
@@ -34,26 +35,25 @@ export default function RecuperarSenha() {
     }
 
     setError("");
-    console.log("Recuperação solicitada para:", email);
-    alert("Se este email estiver cadastrado, enviaremos instruções de recuperação em instantes.");
-    navigate("/");
+    setConfirmacao("Se este email estiver cadastrado, enviaremos instruções de recuperação em instantes.");
+    setEmail("");
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4">
+    <main className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4">
       <h1
-        className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[100ms]
+        className={`text-3xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[100ms]
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
       >
         CALCULADORA DE IMPOSTO DE RENDA
       </h1>
 
       <div
-        className={`w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl border border-naf-gray/30 transition-all duration-[700ms] ease-out
+        className={`w-full max-w-sm p-8 bg-naf-surface rounded-2xl shadow-xl border border-naf-gray/30 transition-all duration-[700ms] ease-out
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
-          className={`text-2xl font-bold text-center mb-2 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms]
+          className={`text-2xl font-bold text-center mb-2 text-naf-ink transition-all duration-[700ms] ease-out delay-[200ms]
             ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
         >
           Recuperar Senha
@@ -71,7 +71,7 @@ export default function RecuperarSenha() {
             className={`transition-all duration-[700ms] ease-out delay-[400ms]
               ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
           >
-            <label htmlFor="recuperar-email" className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="recuperar-email" className="block mb-2 text-sm font-medium text-naf-ink">
               Email Cadastrado
             </label>
             <input
@@ -88,7 +88,7 @@ export default function RecuperarSenha() {
               }}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            <p id="recuperar-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-red font-medium">{error}</p>
+            <p id="recuperar-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-alert font-medium">{error}</p>
           </div>
 
           <div
@@ -104,6 +104,8 @@ export default function RecuperarSenha() {
           </div>
         </form>
 
+        <p role="status" className="mt-4 min-h-5 text-sm text-center font-semibold text-naf-ok">{confirmacao}</p>
+
         <p
           className={`text-center text-sm text-naf-gray mt-6 transition-all duration-[700ms] ease-out delay-[600ms]
             ${isVisible ? "opacity-100" : "opacity-0"}`}
@@ -111,12 +113,12 @@ export default function RecuperarSenha() {
           Lembrou sua senha?{" "}
           <button
             onClick={() => navigate("/login")}
-            className="text-naf-red hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
+            className="text-naf-alert hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
           >
             Faça login
           </button>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

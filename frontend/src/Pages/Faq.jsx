@@ -30,14 +30,14 @@ export default function Faq() {
 
   return (
     <div className="flex flex-col min-h-screen bg-naf-light">
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 py-10 text-naf-blue">
+      <main className="flex-grow w-full max-w-4xl mx-auto px-4 py-10 text-naf-ink">
         <h1 className="text-3xl font-bold mb-4">Perguntas frequentes</h1>
         <p className="mb-8">Informações para ajudar você a usar a calculadora e entender os resultados.</p>
         <div className="space-y-4">
           {perguntas.map(({ pergunta, resposta }) => (
-            <details key={pergunta} className="rounded-xl border border-naf-gray/30 bg-white p-4">
+            <details key={pergunta} className="rounded-xl border border-naf-gray/30 bg-naf-surface p-4">
               <summary className="cursor-pointer font-semibold focus-visible:rounded">{pergunta}</summary>
-              <p className="mt-3 leading-relaxed text-gray-700">{resposta}</p>
+              <p className="mt-3 leading-relaxed text-naf-body">{resposta}</p>
             </details>
           ))}
         </div>

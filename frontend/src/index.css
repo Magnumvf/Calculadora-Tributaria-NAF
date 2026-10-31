@@ -1,24 +1,145 @@
 @import "tailwindcss";
 
+/*
+ * Tokens de cor da aplicação (M4: UX, acessibilidade e tema).
+ *
+ * As cores "fixas" da marca (naf-red, naf-blue) são usadas como fundo de
+ * botões, menu e rodapé e não mudam com o tema.
+ * As cores "semânticas" (ink, body, surface, line, alert, ok...) são usadas
+ * para textos e superfícies e são redefinidas no tema escuro (classe .dark).
+ * Todas as combinações texto/fundo foram conferidas para contraste AA (>= 4,5:1).
+ */
 @theme {
-  --color-naf-red: #C3321D;
-  --color-naf-blue: #132436;
-  --color-naf-gray: #5B6670;
-  --color-naf-light: #EFEFEF;
+  /* Marca */
+  --color-naf-red: #C3321D;   /* fundo de botão com texto branco: 5,6:1 */
+  --color-naf-blue: #132436;  /* menu, rodapé e botões escuros */
+
+  /* Semânticas (tema claro) */
+  --color-naf-light: #EFEFEF;     /* fundo das páginas */
+  --color-naf-surface: #FFFFFF;   /* cartões e formulários */
+  --color-naf-surface-2: #F3F4F6; /* áreas secundárias e hover */
+  --color-naf-ink: #132436;       /* títulos e rótulos */
+  --color-naf-body: #374151;      /* texto corrido */
+  --color-naf-gray: #5B6670;      /* texto de apoio */
+  --color-naf-line: #D1D5DB;      /* bordas */
+  --color-naf-alert: #B42318;     /* mensagens de erro */
+  --color-naf-ok: #166534;        /* mensagens de sucesso */
 }
 
+/* Tema escuro: ativado pela classe .dark no <html> (ver hooks/useTema.js). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  color-scheme: dark;
+  --color-naf-light: #0B1420;
+  --color-naf-surface: #15212F;
+  --color-naf-surface-2: #1E2D3E;
+  --color-naf-ink: #E8EEF4;
+  --color-naf-body: #CBD5E1;
+  --color-naf-gray: #A3B0BC;
+  --color-naf-line: #3A4F66;
+  --color-naf-alert: #FF8A75;
+  --color-naf-ok: #6EE7A0;
+}
+
+/*
+ * Áreas que representam um "documento em papel" (resultado que vira PDF,
+ * selos coloridos) continuam claras em qualquer tema, para manter o
+ * contraste dos fundos coloridos fixos e o visual do PDF.
+ */
+.tema-papel {
+  color-scheme: light;
+  --color-naf-surface: #FFFFFF;
+  --color-naf-surface-2: #F3F4F6;
+  --color-naf-ink: #132436;
+  --color-naf-body: #374151;
+  --color-naf-gray: #5B6670;
+  --color-naf-line: #D1D5DB;
+  --color-naf-alert: #B42318;
+  --color-naf-ok: #166534;
+  color: var(--color-naf-body);
+}
+
+/* No tema escuro, botões azul-marinho ganham contorno para não sumirem no fundo. */
+.dark :is(button, a).bg-naf-blue,
+.dark :is(button, a).bg-\[\#132436\] {
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.35);
+}
+
+.dark .bg-naf-blue\/10 {
+  background-color: rgb(255 255 255 / 0.08);
+}
+
+html {
+  background-color: var(--color-naf-light);
+}
+
+body {
+  background-color: var(--color-naf-light);
+  color: var(--color-naf-ink);
+  /* Garante que nenhum conteúdo gere rolagem horizontal a partir de 320 px. */
+  overflow-x: hidden;
+  overflow-wrap: anywhere;
+}
+
+/* Campos de formulário seguem as cores do tema. */
+input,
+select,
+textarea {
+  background-color: var(--color-naf-surface);
+  color: var(--color-naf-ink);
+}
+
+::placeholder {
+  color: var(--color-naf-gray);
+  opacity: 1;
+}
+
+/* Mídias nunca ultrapassam a largura da tela. */
+img,
+svg,
+video,
+iframe {
+  max-width: 100%;
+}
+
+/* Foco visível para quem navega pelo teclado. */
 :focus-visible {
   outline: 3px solid #CD371F;
   outline-offset: 3px;
 }
 
+.dark :focus-visible {
+  outline-color: #FF8A75;
+}
+
 nav :focus-visible,
-footer :focus-visible {
+footer :focus-visible,
+.dark nav :focus-visible,
+.dark footer :focus-visible {
   outline-color: #FFFFFF;
 }
 
+/* Elementos animados com opacidade 0 ficam visíveis ao receber foco. */
 .opacity-0:focus-within {
   opacity: 1;
+}
+
+/* Link "Pular para o conteúdo": escondido até receber foco pelo teclado. */
+.pular-conteudo {
+  position: absolute;
+  left: 1rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.75rem;
+  background: #FFFFFF;
+  color: #132436;
+  font-weight: 700;
+}
+
+.pular-conteudo:focus {
+  top: 1rem;
 }
 
 @media (prefers-reduced-motion: reduce) {

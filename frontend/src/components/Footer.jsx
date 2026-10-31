@@ -7,7 +7,7 @@ export default function Footer() {
         
         {/* Créditos do Projeto */}
         <div className="text-center md:text-left">
-          <h3 className="font-bold text-lg mb-1 tracking-wide">Calculadora Tributária NAF</h3>
+          <p className="font-bold text-lg mb-1 tracking-wide">Calculadora Tributária NAF</p>
           <p className="text-sm text-[#B2B2B2]">
             Desenvolvido por <span className="font-medium text-white">Alisson Almeida de Oliveira</span>
           </p>

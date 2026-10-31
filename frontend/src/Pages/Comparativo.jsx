@@ -135,31 +135,31 @@ export default function Comparativo() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EFEFEF]">
+    <div className="flex flex-col min-h-screen bg-naf-light">
       
       <main className="flex-grow flex flex-col items-center py-10 px-4">
         {/* CABEÇALHO DA PÁGINA */}
         <div className={`text-center mb-8 transition-all duration-[700ms] ease-out delay-[200ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-          <h1 className="text-3xl font-bold text-[#132436] mb-2">Descubra onde você paga menos impostos</h1>
-          <p className="text-[#5B6670] font-medium max-w-xl mx-auto">
+          <h1 className="text-3xl font-bold text-naf-ink mb-2">Descubra onde você paga menos impostos</h1>
+          <p className="text-naf-gray font-medium max-w-xl mx-auto">
             Preencha os dados abaixo e o sistema fará um raio-x completo comparando o regime como Autônomo (PF) e como Empresa (PJ).
           </p>
         </div>
 
         {/* CONTAINER DOS INPUTS */}
         <div
-          className={`w-full max-w-4xl bg-white rounded-3xl shadow-xl border border-gray-200 transition-all duration-[700ms] ease-out delay-[400ms] ${
+          className={`w-full max-w-4xl bg-naf-surface rounded-3xl shadow-xl border border-naf-line transition-all duration-[700ms] ease-out delay-[400ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
           }`}
         >
           <div className="p-6 md:p-8 grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
             <div className="w-full">
-              <label htmlFor="comparativo-profissao" className="block mb-2 text-sm font-medium text-[#132436]">Sua Profissão</label>
+              <label htmlFor="comparativo-profissao" className="block mb-2 text-sm font-medium text-naf-ink">Sua Profissão</label>
               <select
                 id="comparativo-profissao"
                 value={profissao}
                 onChange={(e) => setProfissao(e.target.value)}
-                className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition cursor-pointer"
+                className="w-full border border-naf-line px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition cursor-pointer"
               >
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
@@ -169,13 +169,13 @@ export default function Comparativo() {
 
             <div className="w-full">
               <div className="relative flex items-center gap-1 mb-2">
-                <label htmlFor="comparativo-renda" className="text-sm font-medium text-[#132436]">Renda Mensal (R$)</label>
+                <label htmlFor="comparativo-renda" className="text-sm font-medium text-naf-ink">Renda Mensal (R$)</label>
                 <button
                   type="button"
                   aria-label="Ajuda sobre renda mensal"
                   aria-expanded={showTooltipRenda}
                   aria-describedby={showTooltipRenda ? "comparativo-renda-help" : undefined}
-                  className="text-gray-600 hover:text-[#132436] focus:outline-none cursor-help"
+                  className="text-naf-body hover:text-naf-ink focus:outline-none cursor-help"
                   onFocus={() => setShowTooltipRenda(true)}
                   onBlur={() => setShowTooltipRenda(false)}
                   onMouseEnter={() => setShowTooltipRenda(true)}
@@ -183,7 +183,7 @@ export default function Comparativo() {
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </button>
-                {showTooltipRenda && <div id="comparativo-renda-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-3rem)] p-3 text-sm text-white bg-[#132436] rounded-xl shadow-lg top-full left-0 mt-2 border border-gray-200">Sua receita bruta total prevista para o mês.</div>}
+                {showTooltipRenda && <div id="comparativo-renda-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-3rem)] p-3 text-sm text-white bg-[#132436] rounded-xl shadow-lg top-full left-0 mt-2 border border-naf-line">Sua receita bruta total prevista para o mês.</div>}
               </div>
               <input
                 id="comparativo-renda"
@@ -194,20 +194,20 @@ export default function Comparativo() {
                 placeholder="Ex: 5000"
                 aria-invalid={Boolean(erro)}
                 aria-describedby="comparativo-renda-error"
-                className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
+                className="w-full border border-naf-line px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
               />
-              <p id="comparativo-renda-error" aria-live="polite" className="text-[#C3321D] text-xs mt-1 min-h-4 font-medium">{erro}</p>
+              <p id="comparativo-renda-error" aria-live="polite" className="text-naf-alert text-xs mt-1 min-h-4 font-medium">{erro}</p>
             </div>
 
             <div className="w-full">
               <div className="relative flex items-center gap-1 mb-2">
-                <label htmlFor="comparativo-custos" className="text-sm font-medium text-[#132436]">Custos Dedutíveis (R$)</label>
+                <label htmlFor="comparativo-custos" className="text-sm font-medium text-naf-ink">Custos Dedutíveis (R$)</label>
                 <button
                   type="button"
                   aria-label="Ajuda sobre custos dedutíveis"
                   aria-expanded={showTooltipCustos}
                   aria-describedby={showTooltipCustos ? "comparativo-custos-help" : undefined}
-                  className="text-gray-600 hover:text-[#132436] focus:outline-none cursor-help"
+                  className="text-naf-body hover:text-naf-ink focus:outline-none cursor-help"
                   onFocus={() => setShowTooltipCustos(true)}
                   onBlur={() => setShowTooltipCustos(false)}
                   onMouseEnter={() => setShowTooltipCustos(true)}
@@ -215,7 +215,7 @@ export default function Comparativo() {
                 >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" /></svg>
                 </button>
-                {showTooltipCustos && <div id="comparativo-custos-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-3rem)] p-3 text-sm text-white bg-[#132436] rounded-xl shadow-lg top-full left-0 mt-2 border border-gray-200">Despesas do seu negócio (aluguel, internet, etc). Usado apenas para abater a base da PF.</div>}
+                {showTooltipCustos && <div id="comparativo-custos-help" role="tooltip" className="absolute z-10 w-64 max-w-[calc(100vw-3rem)] p-3 text-sm text-white bg-[#132436] rounded-xl shadow-lg top-full left-0 mt-2 border border-naf-line">Despesas do seu negócio (aluguel, internet, etc). Usado apenas para abater a base da PF.</div>}
               </div>
               <input
                 id="comparativo-custos"
@@ -223,7 +223,7 @@ export default function Comparativo() {
                 value={custos}
                 onChange={(e) => setCustos(e.target.value)}
                 placeholder="Ex: 800"
-                className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
+                className="w-full border border-naf-line px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
               />
             </div>
           </div>
@@ -236,72 +236,72 @@ export default function Comparativo() {
 
           {/* ÁREA DE RESULTADOS E PDF */}
           {resultado && typeof resultado === "string" ? (
-            <p role="status" aria-live="polite" className="text-[#C3321D] font-medium text-center pb-8">{resultado}</p>
+            <p role="status" aria-live="polite" className="text-naf-alert font-medium text-center pb-8">{resultado}</p>
           ) : resultado && (
-            <div className="border-t border-gray-200 bg-gray-50 rounded-b-3xl">
-              <div id="resultado-comparativo" className="p-6 md:p-8 bg-[#ffffff]">
+            <div className="border-t border-naf-line bg-naf-surface-2 rounded-b-3xl">
+              <div id="resultado-comparativo" className="tema-papel p-6 md:p-8 bg-naf-surface">
                 <div className="mb-8 p-6 rounded-2xl border-2 text-center shadow-sm" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#3b82f6', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#f0fdf4' : '#eff6ff' }}>
-                  <h3 className="text-xl font-bold text-[#1f2937] mb-1">A melhor opção para você é:</h3>
+                  <h2 className="text-xl font-bold text-naf-body mb-1">A melhor opção para você é:</h2>
                   <p role="status" aria-live="polite" className="text-3xl font-extrabold mb-2" style={{ color: resultado.siglaVencedora === 'PJ' ? '#166534' : '#2563eb' }}>{resultado.maisVantajoso}</p>
-                  <p className="text-[#374151] font-medium">Atuando como {resultado.siglaVencedora}, você tem uma <span className="font-bold underline decoration-2">economia de R$ {resultado.diferenca.toFixed(2)}</span> todos os meses.</p>
+                  <p className="text-naf-body font-medium">Atuando como {resultado.siglaVencedora}, você tem uma <span className="font-bold underline decoration-2">economia de R$ {resultado.diferenca.toFixed(2)}</span> todos os meses.</p>
                 </div>
 
-                <h4 className="text-center font-bold text-[#132436] mb-4 uppercase tracking-wider text-sm">Resumo Detalhado dos Cálculos</h4>
+                <h3 className="text-center font-bold text-naf-ink mb-4 uppercase tracking-wider text-sm">Resumo Detalhado dos Cálculos</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="p-5 rounded-xl border-2 shadow-md" style={{ borderColor: resultado.siglaVencedora === 'PF' ? '#3b82f6' : '#e5e7eb', backgroundColor: resultado.siglaVencedora === 'PF' ? '#ffffff' : '#f3f4f6', opacity: resultado.siglaVencedora === 'PF' ? 1 : 0.7 }}>
-                    <h3 className="font-bold text-xl text-[#132436] mb-4 border-b border-[#e5e7eb] pb-2 flex items-center justify-between">Pessoa Física (PF) {resultado.siglaVencedora === 'PF' && <span className="text-xs bg-[#eff6ff] text-[#1d4ed8] px-2 py-1 rounded-full uppercase">Recomendado</span>}</h3>
-                    <div className="space-y-3 text-sm text-[#374151]">
+                  <div className="p-5 rounded-xl border-2 shadow-md" style={{ borderColor: resultado.siglaVencedora === 'PF' ? '#3b82f6' : '#e5e7eb', backgroundColor: resultado.siglaVencedora === 'PF' ? '#ffffff' : '#f3f4f6' }}>
+                    <h3 className="font-bold text-xl text-naf-ink mb-4 border-b border-naf-line pb-2 flex items-center justify-between">Pessoa Física (PF) {resultado.siglaVencedora === 'PF' && <span className="text-xs bg-[#eff6ff] text-[#1d4ed8] px-2 py-1 rounded-full uppercase">Recomendado</span>}</h3>
+                    <div className="space-y-3 text-sm text-naf-body">
                       <div className="flex flex-wrap justify-between gap-x-2"><span>Base de Cálculo:</span> <span className="font-semibold">R$ {resultado.pf.base.toFixed(2)}</span></div>
                       <div className="flex flex-wrap justify-between gap-x-2"><span>Faixa IRPF:</span> <span className="font-semibold">{resultado.pf.faixa}</span></div>
                       <div className="flex flex-wrap justify-between gap-x-2"><span>Dedução Permitida:</span> <span className="font-semibold text-[#166534]">- R$ {resultado.pf.parcelaDedutivel.toFixed(2)}</span></div>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-[#e5e7eb] flex justify-between items-end"><span className="font-bold text-[#132436]">Custo Mensal:</span><span className="text-2xl font-black text-[#C3321D]">R$ {resultado.pf.imposto.toFixed(2)}</span></div>
+                    <div className="mt-5 pt-3 border-t border-naf-line flex justify-between items-end"><span className="font-bold text-naf-ink">Custo Mensal:</span><span className="text-2xl font-black text-naf-alert">R$ {resultado.pf.imposto.toFixed(2)}</span></div>
                   </div>
 
-                  <div className="p-5 rounded-xl border-2 shadow-md" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#e5e7eb', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#ffffff' : '#f3f4f6', opacity: resultado.siglaVencedora === 'PJ' ? 1 : 0.7 }}>
-                    <h3 className="font-bold text-xl text-[#132436] mb-4 border-b border-[#e5e7eb] pb-2 flex items-center justify-between">Pessoa Jurídica (PJ) {resultado.siglaVencedora === 'PJ' && <span className="text-xs bg-[#f0fdf4] text-[#15803d] px-2 py-1 rounded-full uppercase">Recomendado</span>}</h3>
-                    <div className="space-y-3 text-sm text-[#374151]">
+                  <div className="p-5 rounded-xl border-2 shadow-md" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#e5e7eb', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#ffffff' : '#f3f4f6' }}>
+                    <h3 className="font-bold text-xl text-naf-ink mb-4 border-b border-naf-line pb-2 flex items-center justify-between">Pessoa Jurídica (PJ) {resultado.siglaVencedora === 'PJ' && <span className="text-xs bg-[#f0fdf4] text-[#15803d] px-2 py-1 rounded-full uppercase">Recomendado</span>}</h3>
+                    <div className="space-y-3 text-sm text-naf-body">
                       <div className="flex flex-wrap justify-between gap-x-2"><span>Simples ({resultado.pj.aliquota}):</span> <span className="font-semibold">R$ {resultado.pj.simples.toFixed(2)}</span></div>
                       <div className="flex flex-wrap justify-between gap-x-2"><span>Pró-labore base:</span> <span className="font-semibold">R$ {resultado.pj.salarioBase.toFixed(2)}</span></div>
                       <div className="flex flex-wrap justify-between gap-x-2"><span>INSS Mensal (11%):</span> <span className="font-semibold">R$ {resultado.pj.inss.toFixed(2)}</span></div>
                     </div>
-                    <div className="mt-5 pt-3 border-t border-[#e5e7eb] flex justify-between items-end"><span className="font-bold text-[#132436]">Custo Mensal:</span><span className="text-2xl font-black text-[#C3321D]">R$ {resultado.pj.total.toFixed(2)}</span></div>
+                    <div className="mt-5 pt-3 border-t border-naf-line flex justify-between items-end"><span className="font-bold text-naf-ink">Custo Mensal:</span><span className="text-2xl font-black text-naf-alert">R$ {resultado.pj.total.toFixed(2)}</span></div>
                   </div>
                 </div>
               </div>
 
-              <div className="px-6 md:px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-200">
+              <div className="px-6 md:px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-naf-line">
                 <button type="button" onClick={gerarPDF} disabled={gerandoPdf} className={`w-full bg-[#132436] text-white font-bold py-3 rounded-xl transition-all duration-[400ms] shadow-md flex items-center justify-center gap-2 cursor-pointer ${gerandoPdf ? 'opacity-70 cursor-wait' : 'hover:bg-[#0c1825] hover:-translate-y-1'}`}>
                   <svg className={`w-5 h-5 ${gerandoPdf ? 'animate-bounce' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   {gerandoPdf ? "Processando e Baixando PDF..." : "Baixar Relatório Oficial em PDF"}
                 </button>
 
                 <div className="text-center mt-2">
-                  <button type="button" onClick={() => setMostrarEmail(!mostrarEmail)} aria-expanded={mostrarEmail} className="text-sm font-bold text-gray-700 hover:text-[#132436] transition-colors underline cursor-pointer bg-transparent border-none">Deseja enviar os resultados para o seu e-mail?</button>
+                  <button type="button" onClick={() => setMostrarEmail(!mostrarEmail)} aria-expanded={mostrarEmail} className="text-sm font-bold text-naf-body hover:text-naf-ink transition-colors underline cursor-pointer bg-transparent border-none">Deseja enviar os resultados para o seu e-mail?</button>
                 </div>
 
                 {mostrarEmail && (
-                  <div className="mt-2 space-y-3 p-4 bg-white border border-gray-300 rounded-xl shadow-sm">
-                    <label htmlFor="comparativo-email" className="block text-sm font-medium text-[#132436]">Qual e-mail deve receber a simulação?</label>
+                  <div className="mt-2 space-y-3 p-4 bg-naf-surface border border-naf-line rounded-xl shadow-sm">
+                    <label htmlFor="comparativo-email" className="block text-sm font-medium text-naf-ink">Qual e-mail deve receber a simulação?</label>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <input id="comparativo-email" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setMensagemEnvio(""); }} placeholder="contato@exemplo.com" aria-invalid={mensagemEnvio.startsWith("Por favor")} aria-describedby="comparativo-email-message" className="flex-grow border border-gray-300 px-4 py-2 rounded-xl focus:ring-2 focus:ring-[#132436] outline-none text-sm" />
+                      <input id="comparativo-email" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setMensagemEnvio(""); }} placeholder="contato@exemplo.com" aria-invalid={mensagemEnvio.startsWith("Por favor")} aria-describedby="comparativo-email-message" className="flex-grow border border-naf-line px-4 py-2 rounded-xl focus:ring-2 focus:ring-[#132436] outline-none text-sm" />
                       <button type="button" onClick={enviarEmail} className="bg-[#CD371F] text-white px-6 py-2 rounded-xl hover:bg-[#a62b18] transition text-sm font-bold cursor-pointer shadow-sm">Enviar Agora</button>
                     </div>
-                    <p id="comparativo-email-message" role="status" aria-live="polite" className={`text-sm font-bold ${mensagemEnvio.startsWith("Por favor") ? "text-[#C3321D]" : "text-green-700"}`}>{mensagemEnvio}</p>
+                    <p id="comparativo-email-message" role="status" aria-live="polite" className={`text-sm font-bold ${mensagemEnvio.startsWith("Por favor") ? "text-naf-alert" : "text-naf-ok"}`}>{mensagemEnvio}</p>
                   </div>
                 )}
               </div>
 
-              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-gray-200 bg-white rounded-b-3xl">
+              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-naf-line bg-naf-surface rounded-b-3xl">
                 <div className="text-center mb-4">
-                  <h4 className="font-bold text-[#132436] uppercase tracking-wider text-sm flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 text-[#CD371F]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+                  <h3 className="font-bold text-naf-ink uppercase tracking-wider text-sm flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5 text-naf-alert" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
                     Conteúdo Recomendado Para Você
-                  </h4>
-                  <p className="text-sm text-gray-500">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
+                  </h3>
+                  <p className="text-sm text-naf-gray">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
                 </div>
                 
-                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-naf-line">
                   {resultado.siglaVencedora === 'PJ' ? (
                     <iframe className="w-full h-full" src="https://www.youtube.com/embed/yMlNDLDlk2c" title="Como funciona o Simples Nacional" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                   ) : (

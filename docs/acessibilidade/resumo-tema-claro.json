@@ -1,0 +1,98 @@
+[
+  {
+    "rota": "/",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/login",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/cadastro",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/RecuperarSenha",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/faq",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/sobre",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/pagina-inexistente",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/Home",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/calculo-pf",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/calculo-pj",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/comparativo",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/historico",
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  }
+]
