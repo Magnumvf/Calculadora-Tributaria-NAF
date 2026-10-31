@@ -40,26 +40,26 @@ export default function Historico() {
   }, [token]);
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EFEFEF]">
+    <div className="flex flex-col min-h-screen bg-naf-light">
 
       <main className="flex-grow flex flex-col items-center py-10 px-4">
         {/* Cabeçalho */}
         <div className={`text-center mb-8 transition-all duration-[700ms] ease-out delay-[200ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-          <h1 className="text-3xl font-bold text-[#132436] mb-2">Suas Simulações Salvas</h1>
-          <p className="text-[#B2B2B2] font-medium max-w-xl mx-auto">
+          <h1 className="text-3xl font-bold text-naf-ink mb-2">Suas Simulações Salvas</h1>
+          <p className="text-naf-gray font-medium max-w-xl mx-auto">
             Confira abaixo o histórico de todos os cálculos e comparativos tributários guardados em sua conta.
           </p>
         </div>
 
         {/* Listagem / Tabela */}
-        <div className={`w-full max-w-5xl bg-white rounded-3xl shadow-xl border border-gray-200 p-6 md:p-8 transition-all duration-[700ms] ease-out delay-[400ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+        <div className={`w-full max-w-5xl bg-naf-surface rounded-3xl shadow-xl border border-naf-line p-6 md:p-8 transition-all duration-[700ms] ease-out delay-[400ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
           
           {carregando ? (
-            <div className="text-center py-10 text-naf-gray font-medium animate-pulse">
+            <div role="status" aria-live="polite" className="text-center py-10 text-naf-gray font-medium animate-pulse">
               Carregando histórico do banco de dados...
             </div>
           ) : erro ? (
-            <div className="text-center py-10 text-naf-red font-semibold">
+            <div role="alert" aria-live="assertive" className="text-center py-10 text-naf-alert font-semibold">
               {erro}
             </div>
           ) : calculos.length === 0 ? (
@@ -73,51 +73,52 @@ export default function Historico() {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-inner">
-              <table className="min-w-full text-sm text-gray-700">
+            <>
+            <div className="hidden rounded-2xl border border-naf-line shadow-inner lg:block">
+              <table className="w-full table-fixed text-xs text-naf-body">
                 <thead className="bg-[#132436] text-white text-xs uppercase tracking-wider">
                   <tr>
-                    <th className="py-4 px-4 text-left">Data</th>
-                    <th className="py-4 px-4 text-left">Profissão</th>
-                    <th className="py-4 px-4 text-left">Faturamento (Bruto)</th>
-                    <th className="py-4 px-4 text-left">Livro Caixa (PF)</th>
-                    <th className="py-4 px-4 text-left">Imposto PF</th>
-                    <th className="py-4 px-4 text-left">Imposto PJ</th>
-                    <th className="py-4 px-4 text-center">Melhor Opção</th>
-                    <th className="py-4 px-4 text-right">Economia</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Data</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Profissão</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Faturamento (Bruto)</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Livro Caixa (PF)</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Imposto PF</th>
+                    <th scope="col" className="break-words py-3 px-2 text-left">Imposto PJ</th>
+                    <th scope="col" className="break-words py-3 px-2 text-center">Melhor Opção</th>
+                    <th scope="col" className="break-words py-3 px-2 text-right">Economia</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {calculos.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-4 px-4 font-medium text-gray-500">
+                    <tr key={item.id} className="hover:bg-naf-surface-2/80 transition-colors">
+                      <td className="break-words py-3 px-2 font-medium text-naf-gray">
                         {new Date(item.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="py-4 px-4 capitalize font-semibold text-naf-blue">
+                      <td className="break-words py-3 px-2 capitalize font-semibold text-naf-ink">
                         {item.tipoProfissao}
                       </td>
-                      <td className="py-4 px-4 font-medium">
+                      <td className="break-words py-3 px-2 font-medium">
                         R$ {item.faturamento.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="py-4 px-4 text-gray-500">
+                      <td className="break-words py-3 px-2 text-naf-gray">
                         {item.custos ? `R$ ${item.custos.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : "—"}
                       </td>
-                      <td className="py-4 px-4 text-[#CD371F] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPF.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="py-4 px-4 text-[#CD371F] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="py-4 px-4 text-center">
+                      <td className="break-words py-3 px-2 text-center">
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase ${
                           item.melhorOpcao.includes("PJ") 
-                            ? "bg-green-50 text-green-700 border border-green-200" 
-                            : "bg-blue-50 text-blue-700 border border-blue-200"
+                            ? "bg-green-50 text-green-800 border border-green-200" 
+                            : "bg-blue-50 text-blue-800 border border-blue-200"
                         }`}>
                           {item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}
                         </span>
                       </td>
-                      <td className="py-4 px-4 text-right font-bold text-green-600">
+                      <td className="break-words py-3 px-2 text-right font-bold text-naf-ok">
                         R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
                     </tr>
@@ -125,6 +126,22 @@ export default function Historico() {
                 </tbody>
               </table>
             </div>
+            <div className="space-y-4 lg:hidden">
+              {calculos.map((item) => (
+                <article key={item.id} className="rounded-xl border border-naf-line p-4 text-sm text-naf-body">
+                  <h2 className="mb-3 font-bold capitalize text-naf-ink">{item.tipoProfissao} — {new Date(item.createdAt).toLocaleDateString("pt-BR")}</h2>
+                  <dl className="space-y-2">
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Faturamento</dt><dd className="text-right font-medium">R$ {item.faturamento.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Livro Caixa (PF)</dt><dd className="text-right">{item.custos ? `R$ ${item.custos.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : "—"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Imposto PF</dt><dd className="text-right">R$ {item.impostoPF.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Imposto PJ</dt><dd className="text-right">R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Melhor opção</dt><dd className="font-bold">{item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Economia</dt><dd className="text-right font-bold text-naf-ok">R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                  </dl>
+                </article>
+              ))}
+            </div>
+            </>
           )}
         </div>
       </main>

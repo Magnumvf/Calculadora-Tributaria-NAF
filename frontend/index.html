@@ -6,6 +6,15 @@
     <meta name="description" content="Calculadora Web Comparativa entre Pessoa Física e Pessoa Jurídica (NAF)." />
     
     <title>Calculadora Tributária NAF</title>
+    <!-- Aplica o tema salvo antes do React carregar, evitando "piscar" o tema claro. -->
+    <script>
+      try {
+        var t = localStorage.getItem("naf-tema");
+        if (t === "escuro" || (!t && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+          document.documentElement.classList.add("dark");
+        }
+      } catch (e) {}
+    </script>
   </head>
   <body>
     <div id="root"></div>

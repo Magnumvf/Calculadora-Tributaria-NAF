@@ -46,8 +46,8 @@ uma única vez, acima das páginas, incluindo login e página 404.
 | `/calculo-pj` | `CalculoPJ` | Calculadora PJ existente |
 | `/comparativo` | `Comparativo` | Formulário e resultado existentes |
 | `/historico` | `Historico` | Histórico existente conectado à API |
-| `/faq` | `Faq` | Esqueleto para conteúdo do M4 |
-| `/sobre` | `Sobre` | Esqueleto para conteúdo e contato do M4 |
+| `/faq` | `Faq` | Perguntas frequentes em seções acessíveis |
+| `/sobre` | `Sobre` | Informações do NAF e links institucionais |
 | `/login`, `/cadastro`, `/RecuperarSenha` | Páginas de acesso | Fluxo existente |
 | Qualquer outra rota | `NaoEncontrada` | Página 404 |
 
@@ -57,9 +57,10 @@ M1, o formulário passará para `/`, o resultado para `/comparativo`, com estado
 compartilhado e redirecionamento quando não houver simulação.
 
 M2 pode trabalhar nas calculadoras existentes; M3 encontra o PDF em
-`src/Pages/Comparativo.jsx`; M4 pode preencher `Faq.jsx` e `Sobre.jsx`.
-Coordenem alterações em `Comparativo.jsx`, pois a separação do formulário e do
-resultado também afetará esse arquivo.
+`src/Pages/Comparativo.jsx`; M4 trabalha responsividade, acessibilidade e QA.
+As páginas `Faq.jsx` e `Sobre.jsx` já têm conteúdo inicial. Coordenem alterações
+em `Comparativo.jsx`, pois a separação do formulário e do resultado também
+afetará esse arquivo.
 
 Para verificar a base:
 

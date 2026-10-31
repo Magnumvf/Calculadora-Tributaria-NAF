@@ -17,6 +17,8 @@ function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      {/* Destino do link "Pular para o conteúdo" do menu (acessibilidade). */}
+      <div id="conteudo-principal" tabIndex={-1} className="outline-none">
       <Routes>
         {/* Rotas Públicas */}
         <Route path="/" element={<Landing />} />
@@ -35,6 +37,7 @@ function App() {
         <Route path="/historico" element={<Historico />} />
         <Route path="*" element={<NaoEncontrada />} />
       </Routes>
+      </div>
     </BrowserRouter>
   );
 }

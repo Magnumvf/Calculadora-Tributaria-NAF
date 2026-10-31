@@ -53,9 +53,9 @@ export default function Landing() {
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-extrabold mb-6 leading-tight">
               Pare de perder dinheiro para o Leão. <br />
-              <span className="text-naf-red">Simule seus impostos em segundos.</span>
+              <span className="text-[#FF8A75]">Simule seus impostos em segundos.</span>
             </h1>
-            <p className="text-lg md:text-xl text-naf-gray mb-10 max-w-2xl mx-auto">
+            <p className="text-lg md:text-xl text-[#B2B2B2] mb-10 max-w-2xl mx-auto">
               Nossa calculadora inteligente ajuda profissionais autônomos a compararem os encargos entre Pessoa Física e Pessoa Jurídica para tomar a melhor decisão financeira.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
@@ -78,30 +78,35 @@ export default function Landing() {
         {/* FAQ */}
         <section id="faq-section" className="w-full py-20 px-6 bg-naf-light">
           <div className="max-w-3xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-naf-blue mb-2">Dúvidas Frequentes (FAQ)</h2>
+            <h2 className="text-3xl font-bold text-center text-naf-ink mb-2">Dúvidas Frequentes (FAQ)</h2>
             <p className="text-center text-naf-gray mb-10 font-medium">Entenda como a nossa ferramenta pode ajudar na sua rotina</p>
 
             <div className="space-y-4">
               {faqs.map((faq, index) => (
                 <div 
                   key={index} 
-                  className="bg-white border border-naf-gray/20 rounded-2xl shadow-sm overflow-hidden transition-all duration-300"
+                  className="bg-naf-surface border border-naf-gray/20 rounded-2xl shadow-sm overflow-hidden transition-all duration-300"
                 >
                   <button
+                    type="button"
+                    aria-expanded={faqAberto === index}
+                    aria-controls={`faq-answer-${index}`}
                     onClick={() => toggleFaq(index)}
-                    className="w-full flex justify-between items-center p-6 text-left focus:outline-none hover:bg-gray-50 transition cursor-pointer"
+                    className="w-full flex justify-between items-center p-6 text-left hover:bg-naf-surface-2 transition cursor-pointer"
                   >
-                    <span className="font-bold text-naf-blue text-lg">{faq.pergunta}</span>
+                    <span className="font-bold text-naf-ink text-lg">{faq.pergunta}</span>
                     <svg 
-                      className={`w-6 h-6 text-naf-red transform transition-transform duration-300 ${faqAberto === index ? 'rotate-180' : ''}`} 
+                      className={`w-6 h-6 text-naf-alert transform transition-transform duration-300 ${faqAberto === index ? 'rotate-180' : ''}`} 
                       fill="none" viewBox="0 0 24 24" stroke="currentColor"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
                   
-                  <div 
-                    className={`px-6 text-gray-700 text-sm md:text-base leading-relaxed overflow-hidden transition-all duration-300 ease-in-out ${faqAberto === index ? 'max-h-40 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
+                  <div
+                    id={`faq-answer-${index}`}
+                    hidden={faqAberto !== index}
+                    className={`px-6 text-naf-body text-sm md:text-base leading-relaxed overflow-hidden transition-all duration-300 ease-in-out ${faqAberto === index ? 'max-h-96 pb-6 opacity-100' : 'max-h-0 opacity-0'}`}
                   >
                     {faq.resposta}
                   </div>
