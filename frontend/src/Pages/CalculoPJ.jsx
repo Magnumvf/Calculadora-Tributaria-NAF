@@ -14,7 +14,7 @@ export default function CalculoPJ() {
   const [mensagemEnvio, setMensagemEnvio] = useState("");
   const [profissao, setProfissao] = useState("psicologo");
   const [showTooltipRenda, setShowTooltipRenda] = useState(false);
-
+  const [folha, setFolha] = useState("");
   const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
@@ -51,31 +51,18 @@ export default function CalculoPJ() {
       const response = await api.post("/calculos", {
         tipoProfissao: profissao,
         faturamento: rendaNum,
-        custos: 0
+        custos: 0,
+        folha: parseFloat(folha) || 0,
       });
 
       const { impostoPJ } = response.data.calculo;
-
-      let simples = 0;
-      let aliquota = "";
-
-      if (profissao === "advogado") {
-        simples = rendaNum * 0.045;
-        aliquota = "4,5%";
-      } else {
-        simples = rendaNum * 0.06;
-        aliquota = "6%";
-      }
-
-      const salario28 = rendaNum * 0.28;
-      const salarioMin = 1621;
-      const salarioBase = salario28 < salarioMin ? salarioMin : salario28;
-      const inss = salarioBase * 0.11;
+      const { anexo, aliquota, fatorR, simples, inss } = response.data.detalhe;
 
       setResultado({
         simples,
-        aliquota,
-        salarioBase,
+        aliquota: (aliquota * 100).toFixed(1).replace(".", ",") + "%",
+        anexo,
+        fatorR,
         inss,
         total: impostoPJ,
       });
@@ -114,6 +101,8 @@ export default function CalculoPJ() {
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
                 <option value="advogado">Advogado(a)</option>
+                <option value="medico">Médico(a)</option>
+                <option value="dentista">Dentista</option>
               </select>
             </div>
 
@@ -135,6 +124,21 @@ export default function CalculoPJ() {
               {erro && <p className="text-naf-red text-sm mt-1 font-medium">{erro}</p>}
             </div>
 
+              {(profissao === "medico" || profissao === "dentista") && (
+              <div>
+                <label className="block mb-1 text-sm font-medium text-naf-blue">
+                  Folha de pagamento / pró-labore mensal (R$)
+                </label>
+                <input
+                  type="number"
+                  value={folha}
+                  onChange={(e) => setFolha(e.target.value)}
+                  placeholder="Ex: 1000"
+                  className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none"
+                />
+              </div>
+            )}
+
             <div className={`transition-all duration-[700ms] ease-out delay-[800ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}>
               <button onClick={calcularPJ} className="w-full bg-naf-blue text-white font-bold py-3 rounded-xl hover:bg-[#0c1825] hover:scale-105 transition-all duration-[400ms] ease-out shadow-md">
                 Calcular
@@ -148,8 +152,11 @@ export default function CalculoPJ() {
                 ) : (
                   <>
                     <div className="space-y-2 text-sm text-naf-blue">
-                      <p><strong>Simples Nacional ({resultado.aliquota}):</strong> R$ {resultado.simples.toFixed(2)}</p>
-                      <p><strong>Pró-labore base:</strong> R$ {resultado.salarioBase.toFixed(2)}</p>
+                      <p><strong>Enquadramento:</strong> {resultado.anexo} ({resultado.aliquota})</p>
+                      {resultado.fatorR !== null && (
+                        <p><strong>Fator R:</strong> {(resultado.fatorR * 100).toFixed(1).replace(".", ",")}%</p>
+                      )}
+                      <p><strong>Simples Nacional:</strong> R$ {resultado.simples.toFixed(2)}</p>
                       <p><strong>INSS (11%):</strong> R$ {resultado.inss.toFixed(2)}</p>
                     </div>
                     <p className="text-lg font-bold text-naf-red mt-3 pt-3 border-t border-naf-gray/30">
