@@ -22,7 +22,7 @@ function CalculoPF() {
   
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login", { replace: true, state: { from: "/calculo-pf" } });
     }
   }, [token, navigate]);
 

@@ -1,3 +1,4 @@
+import ContatoNaf from "../components/ContatoNaf";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -7,16 +8,9 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const token = localStorage.getItem("token");
 
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    mensagem: "",
-  });
-  const [enviando, setEnviando] = useState(false);
-
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login", { replace: true, state: { from: "/Home" } });
     }
   }, [token, navigate]);
 
@@ -29,36 +23,6 @@ export default function Home() {
 
   const handleNavigate = (path) => {
     navigate(path);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setEnviando(true);
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/send-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert('Mensagem enviada com sucesso ao NAF!');
-        setFormData({ nome: "", email: "", mensagem: "" });
-      } else {
-        alert('Houve um erro ao enviar a mensagem. Tente novamente.');
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert('Erro de conexão com o servidor. Como o backend da NP3 não está rodando, a simulação visual funcionou!');
-      setFormData({ nome: "", email: "", mensagem: "" });
-    } finally {
-      setEnviando(false);
-    }
   };
 
   return (
@@ -120,7 +84,7 @@ export default function Home() {
                   Analise PF e PJ lado a lado. Descubra a opção mais vantajosa para sua renda e gere um relatório em PDF.
                 </p>
               </div>
-              <button onClick={() => handleNavigate("/comparativo")} className="w-full py-3 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition-colors cursor-pointer">
+              <button onClick={() => handleNavigate("/")} className="w-full py-3 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition-colors cursor-pointer">
                 Gerar Comparativo
               </button>
             </div>
@@ -201,58 +165,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEÇÃO 3: CONTATO NAF */}
-        <section className={`w-full max-w-2xl bg-white rounded-3xl shadow-lg border border-naf-gray/20 p-8 mb-4 transition-all duration-[700ms] ease-out delay-[1200ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-naf-blue">Fale com o NAF</h2>
-            <p className="text-sm text-naf-gray mt-1">Sua situação é muito complexa? Envie uma mensagem para nossa equipe.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4 text-left">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-naf-blue mb-1">Nome Completo</label>
-                <input
-                  type="text"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-naf-blue mb-1">E-mail</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-naf-blue mb-1">Sua Mensagem / Dúvida</label>
-              <textarea
-                name="mensagem"
-                value={formData.mensagem}
-                onChange={handleChange}
-                required
-                rows="3"
-                className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition resize-none"
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              disabled={enviando}
-              className={`cursor-pointer w-full bg-naf-blue text-white py-3 rounded-xl hover:bg-[#0c1825] transition-all duration-[400ms] ease-out text-base font-bold shadow-md ${enviando ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
-            >
-              {enviando ? "Enviando para o NAF..." : "Enviar Mensagem"}
-            </button>
-          </form>
-        </section>
+        <ContatoNaf />
 
       </main>
 
