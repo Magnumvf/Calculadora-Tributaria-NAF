@@ -176,10 +176,30 @@ export default function Comparativo() {
           onclone: (documentoClonado) => normalizarCoresPdf(documentoClonado),
         },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak:    { mode: ["css", "legacy"], before: [".pdf-pagina-memoria"], avoid: ["tr"] }
+        pagebreak:    { mode: ["css"], before: [".pdf-pagina-memoria"], avoid: ["tr"] }
       };
 
-      await html2pdf().set(opcoes).from(elemento).save();
+      const worker = html2pdf().set(opcoes).from(elemento).toContainer();
+      const workerComQuebraValidada = worker.get("container", (container) => {
+        const memoria = container.querySelector(".pdf-pagina-memoria");
+        const espacador = memoria?.previousElementSibling;
+        const alturaEspacador = Number.parseFloat(espacador?.style.height || "");
+        const alturaPagina = worker.prop.pageSize.inner.px.height;
+
+        if (
+          !memoria ||
+          !espacador ||
+          espacador.style.display !== "block" ||
+          !Number.isFinite(alturaEspacador)
+        ) return;
+
+        // O pagebreak do html2pdf insere uma página inteira quando o alvo já
+        // começa numa página posterior. Nesse caso, a quebra é desnecessária.
+        const inicioSemEspacador = memoria.getBoundingClientRect().top - alturaEspacador;
+        if (Math.floor(inicioSemEspacador / alturaPagina) >= 1) espacador.remove();
+      });
+
+      await workerComQuebraValidada.toCanvas().toPdf().save();
     } catch (error) {
       console.error("Falha ao processar o arquivo PDF:", error);
     } finally {
@@ -326,7 +346,7 @@ export default function Comparativo() {
                   <GraficoComparativo impostoPF={resultado.pf.imposto} impostoPJ={resultado.pj.total} />
                 </section>
 
-                <section className="pdf-pagina-memoria mt-8" style={{ breakBefore: "page", pageBreakBefore: "always" }}>
+                <section className="pdf-pagina-memoria mt-8">
                   <div className="mb-5 flex items-end justify-between gap-4 border-b-2 border-[#132436] pb-3">
                     <div>
                       <p className="text-xs font-bold uppercase tracking-widest text-[#CD371F]">NAF · Universidade Christus</p>
