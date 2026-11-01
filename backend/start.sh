@@ -1,3 +1,6 @@
+echo "Gerando cliente do Prisma..."
+npx prisma generate
+
 echo "Executando migrações do Prisma..."
 npx prisma migrate deploy
 

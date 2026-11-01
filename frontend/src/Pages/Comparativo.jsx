@@ -6,7 +6,14 @@ import api from "../services/api";
 import GraficoComparativo from "../components/GraficoComparativo";
 
 const formatarMoeda = (valor) => valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-const nomesProfissao = { psicologo: "Psicólogo(a)", arquiteto: "Arquiteto(a)", advogado: "Advogado(a)" };
+const formatarPercentual = (valor) => new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(valor);
+const nomesProfissao = {
+  psicologo: "Psicólogo(a)",
+  arquiteto: "Arquiteto(a)",
+  advogado: "Advogado(a)",
+  medico: "Médico(a)",
+  dentista: "Dentista"
+};
 
 function normalizarCoresPdf(documento) {
   const contexto = documento.createElement("canvas").getContext("2d");
@@ -51,6 +58,7 @@ function normalizarCoresPdf(documento) {
 export default function Comparativo() {
   const [renda, setRenda] = useState("");
   const [custos, setCustos] = useState("");
+  const [folha, setFolha] = useState("");
   const [erro, setErro] = useState("");
   const [resultado, setResultado] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -102,10 +110,12 @@ export default function Comparativo() {
       const response = await api.post("/calculos", {
         tipoProfissao: profissao,
         faturamento: rendaNum,
-        custos: custosNum
+        custos: custosNum,
+        folha: parseFloat(folha) || 0
       });
 
       const { impostoPF, impostoPJ, melhorOpcao, economiaMensal } = response.data.calculo;
+      const detalhe = response.data.detalhe;
 
       const basePF = rendaNum - custosNum;
       let faixaPF = "Isento";
@@ -117,17 +127,20 @@ export default function Comparativo() {
       else if (basePF <= 4664.68) { faixaPF = "22,5%"; parcelaDedutivel = 675.49; }
       else { faixaPF = "27,5%"; parcelaDedutivel = 908.73; }
 
-      let aliquotaPJ = profissao === "advogado" ? "4,5%" : "6%";
-      const salario28 = rendaNum * 0.28;
-      const salarioMin = 1621;
-      const salarioBase = salario28 < salarioMin ? salarioMin : salario28;
-      const inss = salarioBase * 0.11;
-
       const siglaVencedora = melhorOpcao.includes("PJ") ? "PJ" : "PF";
 
       setResultado({
         pf: { base: basePF, faixa: faixaPF, parcelaDedutivel, imposto: impostoPF },
-        pj: { simples: rendaNum * (profissao === "advogado" ? 0.045 : 0.06), aliquota: aliquotaPJ, salarioBase, inss, total: impostoPJ },
+        pj: {
+          simples: detalhe.simples,
+          aliquota: formatarPercentual(detalhe.aliquota),
+          anexo: detalhe.anexo,
+          folha: detalhe.folha,
+          fatorR: detalhe.fatorR,
+          salarioBase: detalhe.salarioBase,
+          inss: detalhe.inss,
+          total: impostoPJ
+        },
         maisVantajoso: melhorOpcao,
         siglaVencedora,
         diferenca: economiaMensal
@@ -236,6 +249,8 @@ export default function Comparativo() {
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
                 <option value="advogado">Advogado(a)</option>
+                <option value="medico">Médico(a)</option>
+                <option value="dentista">Dentista</option>
               </select>
             </div>
 
@@ -284,6 +299,23 @@ export default function Comparativo() {
                 className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
               />
             </div>
+
+            {(profissao === "medico" || profissao === "dentista") && (
+              <div className="w-full">
+                <label className="block mb-2 text-sm font-medium text-[#132436]" htmlFor="folha-fator-r">
+                  Folha mensal considerada no Fator R (R$)
+                </label>
+                <input
+                  id="folha-fator-r"
+                  type="number"
+                  min="0"
+                  value={folha}
+                  onChange={(e) => setFolha(e.target.value)}
+                  placeholder="Ex: 1400"
+                  className="w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-[#CD371F] outline-none transition"
+                />
+              </div>
+            )}
           </div>
 
           <div className="px-6 md:px-8 pb-8">
@@ -311,9 +343,12 @@ export default function Comparativo() {
                   <p className="text-sm text-gray-700">Profissão: {nomesProfissao[profissao] || profissao}</p>
                   <p className="text-sm text-gray-700">Renda/faturamento mensal: {formatarMoeda(Number(renda))}</p>
                   <p className="text-sm text-gray-700">Custos dedutíveis informados: {formatarMoeda(Number(custos))}</p>
+                  {resultado.pj.fatorR !== null && (
+                    <p className="text-sm text-gray-700">Folha mensal informada para o Fator R: {formatarMoeda(resultado.pj.folha)}</p>
+                  )}
                 </section>
 
-                <div className="mb-6 rounded-2xl border-l-4 p-5 text-center" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#3b82f6', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#f0fdf4' : '#eff6ff', breakInside: "avoid" }}>
+                <div className="mb-6 rounded-2xl border-l-4 p-5 text-center" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#CD371F' : '#3b82f6', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#fef2f2' : '#eff6ff', breakInside: "avoid" }}>
                   <h3 className="text-sm font-semibold uppercase tracking-wide text-gray-600">Cenário mais vantajoso</h3>
                   <p className="mt-1 text-2xl font-extrabold text-[#132436]">{resultado.maisVantajoso}</p>
                   <p className="mt-2 text-sm text-gray-700">Economia mensal estimada de <strong className="text-lg tabular-nums">{formatarMoeda(resultado.diferenca)}</strong></p>
@@ -332,13 +367,14 @@ export default function Comparativo() {
                   </div>
 
                   <div className="rounded-xl border border-gray-200 bg-white p-4" style={{ borderTop: "3px solid #CD371F", breakInside: "avoid" }}>
-                    <h3 className="mb-3 flex items-center justify-between border-b border-gray-200 pb-2 font-bold text-[#132436]">Pessoa Jurídica (PJ) {resultado.siglaVencedora === 'PJ' && <span className="rounded-full bg-green-50 px-2 py-1 text-[10px] uppercase text-green-700">Mais vantajosa</span>}</h3>
+                    <h3 className="mb-3 flex items-center justify-between border-b border-gray-200 pb-2 font-bold text-[#132436]">Pessoa Jurídica (PJ) {resultado.siglaVencedora === 'PJ' && <span className="rounded-full bg-red-50 px-2 py-1 text-[10px] uppercase text-red-700">Mais vantajosa</span>}</h3>
                     <div className="space-y-2 text-sm text-gray-700">
-                      <div className="flex justify-between gap-3"><span>Simples Nacional ({resultado.pj.aliquota})</span><span className="font-medium tabular-nums">{formatarMoeda(resultado.pj.simples)}</span></div>
+                      <div className="flex justify-between gap-3"><span>Simples Nacional · {resultado.pj.anexo} ({resultado.pj.aliquota})</span><span className="font-medium tabular-nums">{formatarMoeda(resultado.pj.simples)}</span></div>
+                      {resultado.pj.fatorR !== null && <div className="flex justify-between gap-3"><span>Fator R</span><span className="font-medium tabular-nums">{formatarPercentual(resultado.pj.fatorR)}</span></div>}
                       <div className="flex justify-between gap-3"><span>Base do pró-labore</span><span className="font-medium tabular-nums">{formatarMoeda(resultado.pj.salarioBase)}</span></div>
                       <div className="flex justify-between gap-3"><span>INSS (11%)</span><span className="font-medium tabular-nums">{formatarMoeda(resultado.pj.inss)}</span></div>
                     </div>
-                    <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-gray-200 pt-3"><span className="font-bold text-[#132436]">Total mensal</span><span className="text-xl font-extrabold tabular-nums text-[#132436]">{formatarMoeda(resultado.pj.total)}</span></div>
+                    <div className="mt-4 flex items-baseline justify-between gap-3 border-t border-gray-200 pt-3"><span className="font-bold text-[#132436]">Total mensal</span><span className="text-xl font-extrabold tabular-nums text-[#CD371F]">{formatarMoeda(resultado.pj.total)}</span></div>
                   </div>
                 </div>
 
@@ -360,6 +396,18 @@ export default function Comparativo() {
                     <div><p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Diferença mensal</p><p className="mt-1 text-sm font-bold tabular-nums text-[#132436]">{formatarMoeda(resultado.diferenca)}</p></div>
                   </div>
                   <p className="mb-5 text-sm leading-relaxed text-gray-600">Detalhamento dos tributos, bases e parâmetros informados nesta simulação.</p>
+                  <div className="mb-5 rounded-xl border border-gray-200 bg-white p-4" style={{ breakInside: "avoid" }}>
+                    <h4 className="mb-2 font-bold text-[#132436]">Enquadramento da Pessoa Jurídica</h4>
+                    <p className="text-sm text-gray-700">{resultado.pj.anexo} · alíquota do Simples Nacional: {resultado.pj.aliquota}</p>
+                    {resultado.pj.fatorR !== null && (
+                      <div className="mt-2 space-y-1 text-sm text-gray-700">
+                        <p>Folha mensal informada: {formatarMoeda(resultado.pj.folha)}</p>
+                        <p>Faturamento mensal considerado: {formatarMoeda(Number(renda))}</p>
+                        <p>Fator R aplicado pelo cálculo M2 (folha ÷ faturamento): {formatarPercentual(resultado.pj.fatorR)}</p>
+                        <p className="text-xs text-gray-500">O motor M2 usa os valores mensais informados para calcular a razão do Fator R.</p>
+                      </div>
+                    )}
+                  </div>
                   <h4 className="mb-2 text-base font-bold text-[#132436]" style={{ breakAfter: "avoid", pageBreakAfter: "avoid" }}>Pessoa Física (PF)</h4>
                   <div className="pdf-tabela mb-6 overflow-hidden rounded-xl border border-gray-300">
                     <table className="w-full table-fixed border-collapse text-left text-xs">
@@ -374,7 +422,7 @@ export default function Comparativo() {
                       <colgroup><col style={{ width: "25%" }} /><col style={{ width: "25%" }} /><col style={{ width: "20%" }} /><col style={{ width: "30%" }} /></colgroup>
                       <thead className="bg-gray-100 text-[#132436]"><tr><th className="p-3 font-semibold">Tributo</th><th className="p-3 font-semibold">Base de cálculo</th><th className="p-3 font-semibold">Alíquota</th><th className="p-3 font-semibold">Valor calculado</th></tr></thead>
                       <tbody>
-                        <tr className="border-t border-gray-200" style={{ breakInside: "avoid" }}><td className="p-3 align-top font-medium">Simples Nacional</td><td className="p-3 align-top tabular-nums">{formatarMoeda(Number(renda))}</td><td className="p-3 align-top">{resultado.pj.aliquota}</td><td className="p-3 align-top font-semibold tabular-nums">{formatarMoeda(resultado.pj.simples)}</td></tr>
+                        <tr className="border-t border-gray-200" style={{ breakInside: "avoid" }}><td className="p-3 align-top font-medium">Simples Nacional · {resultado.pj.anexo}</td><td className="p-3 align-top tabular-nums">{formatarMoeda(Number(renda))}</td><td className="p-3 align-top">{resultado.pj.aliquota}</td><td className="p-3 align-top font-semibold tabular-nums">{formatarMoeda(resultado.pj.simples)}</td></tr>
                         <tr className="border-t border-gray-200" style={{ breakInside: "avoid" }}><td className="p-3 align-top font-medium">INSS sobre pró-labore</td><td className="p-3 align-top tabular-nums">{formatarMoeda(resultado.pj.salarioBase)}</td><td className="p-3 align-top">11%</td><td className="p-3 align-top font-semibold tabular-nums">{formatarMoeda(resultado.pj.inss)}</td></tr>
                       </tbody>
                     </table>
