@@ -1,5 +1,22 @@
 const prisma = require('../config/prisma');
 
+function detalhesPJSalvos(calculo) {
+  const aliquotasPorAnexo = { 'Anexo III': 0.06, 'Anexo IV': 0.045, 'Anexo V': 0.155 };
+  const aliquota = aliquotasPorAnexo[calculo.anexo];
+  if (!Number.isFinite(aliquota) || !Number.isFinite(calculo.faturamento)) return null;
+
+  const salarioBase = Math.max(calculo.faturamento * 0.28, 1621);
+  return {
+    anexo: calculo.anexo,
+    aliquota,
+    fatorR: calculo.fatorR,
+    folha: calculo.folha,
+    salarioBase,
+    simples: calculo.faturamento * aliquota,
+    inss: salarioBase * 0.11,
+  };
+}
+
 const calculoController = {
   create: async (req, res) => {
     try {
@@ -117,7 +134,10 @@ const calculoController = {
         orderBy: { createdAt: 'desc' }
       });
 
-      return res.status(200).json(historico);
+      return res.status(200).json(historico.map((calculo) => ({
+        ...calculo,
+        detalhe: detalhesPJSalvos(calculo),
+      })));
     } catch (error) {
       console.error("Erro ao buscar histórico:", error);
       return res.status(500).json({ error: "Erro interno ao buscar o histórico de cálculos." });

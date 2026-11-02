@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 import { gerarCsvHistorico, nomeArquivoHistorico } from "../utils/historicoCsv";
 
-export default function Historico() {
+export default function Historico({ abrirSimulacao }) {
   const [calculos, setCalculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
@@ -16,7 +16,7 @@ export default function Historico() {
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login", { replace: true, state: { from: "/historico" } });
     }
   }, [token, navigate]);
 
@@ -94,7 +94,7 @@ export default function Historico() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
               <p className="text-naf-gray font-medium text-lg">Você ainda não realizou nenhuma simulação.</p>
-              <button onClick={() => navigate("/comparativo")} className="mt-4 px-6 py-2.5 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition shadow-md">
+              <button onClick={() => navigate("/")} className="mt-4 px-6 py-2.5 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition shadow-md">
                 Fazer Primeiro Cálculo
               </button>
             </div>
@@ -123,6 +123,7 @@ export default function Historico() {
                     <th className="py-4 px-4 text-left">Imposto PJ</th>
                     <th className="py-4 px-4 text-center">Melhor Opção</th>
                     <th className="py-4 px-4 text-right">Economia</th>
+                    <th className="py-4 px-4 text-left">Comparativo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -157,6 +158,12 @@ export default function Historico() {
                       </td>
                       <td className="py-4 px-4 text-right font-bold text-green-600">
                         R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
+                      </td>
+                      <td className="py-4 px-4">
+                        <button type="button" className="underline font-medium text-naf-blue" onClick={() => {
+                          abrirSimulacao(item);
+                          navigate("/comparativo");
+                        }}>Abrir</button>
                       </td>
                     </tr>
                   ))}

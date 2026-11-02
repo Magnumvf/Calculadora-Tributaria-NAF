@@ -12,7 +12,8 @@ require.cache[prismaPath] = {
       create: async ({ data }) => {
         registrosCriados.push(data);
         return { id: `calculo-${registrosCriados.length}`, createdAt: new Date("2026-11-01T12:00:00Z"), ...data };
-      }
+      },
+      findMany: async () => registrosCriados.map((data, index) => ({ id: `calculo-${index + 1}`, ...data })),
     }
   }
 };
@@ -64,4 +65,25 @@ test("advogado preserva o Anexo IV e profissões antigas não recebem Fator R", 
   assert.equal(psicologo.body.detalhe.anexo, "Anexo III");
   assert.equal(psicologo.body.detalhe.aliquota, 0.06);
   assert.equal(psicologo.body.detalhe.fatorR, null);
+});
+
+test("histórico retorna o detalhamento PJ com os campos M2 persistidos", async () => {
+  await calcular({ tipoProfissao: "medico", faturamento: 10000, custos: 500, folha: 2800 });
+  const response = {
+    statusCode: null,
+    body: null,
+    status(code) { this.statusCode = code; return this; },
+    json(value) { this.body = value; return this; }
+  };
+
+  await controller.history({ userId: "usuario-teste" }, response);
+  const medico = response.body.find((calculo) => calculo.tipoProfissao === "medico");
+
+  assert.equal(response.statusCode, 200);
+  assert.equal(medico.folha, 2800);
+  assert.equal(medico.fatorR, 0.28);
+  assert.equal(medico.anexo, "Anexo III");
+  assert.equal(medico.detalhe.fatorR, 0.28);
+  assert.equal(medico.detalhe.simples, 600);
+  assert.ok(Math.abs(medico.detalhe.inss - 308) < 1e-9);
 });

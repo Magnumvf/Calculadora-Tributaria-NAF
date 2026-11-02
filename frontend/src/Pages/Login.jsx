@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 export default function Login() {
@@ -7,6 +7,10 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const location = useLocation();
+  const destino = ["/Home", "/calculo-pf", "/calculo-pj", "/historico"].includes(location.state?.from)
+    ? location.state.from
+    : "/";
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -45,7 +49,7 @@ export default function Login() {
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       alert("Login realizado com sucesso!");
-      navigate("/Home");
+      navigate(destino, { replace: true });
 
     } catch (error) {
       const mensagemErro = error.response?.data?.error || "Erro ao conectar ao servidor.";
@@ -75,6 +79,8 @@ export default function Login() {
         >
           Login
         </h2>
+
+        {destino !== "/" && <p className="mb-4 text-sm text-naf-blue" role="status">Entre na sua conta para acessar a página solicitada.</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div
@@ -149,9 +155,9 @@ export default function Login() {
           }`}
         >
           Não tem conta?{" "}
-          <a href="/Cadastro" className="text-naf-red hover:underline font-bold">
+          <Link to="/cadastro" className="text-naf-red hover:underline font-bold">
             Cadastre-se
-          </a>
+          </Link>
         </p>
 
         <p
@@ -160,9 +166,9 @@ export default function Login() {
           }`}
         >
           Esqueceu a senha?{" "}
-          <a href="/RecuperarSenha" className="text-naf-red hover:underline font-bold">
+          <Link to="/RecuperarSenha" className="text-naf-red hover:underline font-bold">
             Recuperar Senha
-          </a>
+          </Link>
         </p>
       </div>
 
