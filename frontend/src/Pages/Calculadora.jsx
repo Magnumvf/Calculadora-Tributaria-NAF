@@ -23,9 +23,11 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
       return;
     }
     const faturamento = Number(formulario.renda);
-    const custos = Number(formulario.custos);
-    if (!formulario.renda || !Number.isFinite(faturamento) || faturamento <= 0 || faturamento > 15000 || !Number.isFinite(custos) || custos < 0) {
-      setErro("Informe renda maior que zero até R$ 15.000 e custos iguais ou maiores que zero.");
+    const custos = formulario.custos === "" ? undefined : Number(formulario.custos);
+    const precisaFatorR = ["medico", "dentista"].includes(formulario.profissao);
+    const folha = formulario.folha === "" ? undefined : Number(formulario.folha);
+    if (!formulario.renda || !Number.isFinite(faturamento) || faturamento <= 0 || faturamento > 15000 || (custos !== undefined && (!Number.isFinite(custos) || custos < 0)) || (folha !== undefined && (!Number.isFinite(folha) || folha < 0)) || (precisaFatorR && folha === undefined)) {
+      setErro("Informe renda válida, custos não negativos e, para médicos e dentistas, a folha mensal do Fator R.");
       return;
     }
     setErro("");
@@ -34,9 +36,10 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
       const { data } = await api.post("/calculos", {
         tipoProfissao: formulario.profissao,
         faturamento,
-        custos,
+        ...(custos !== undefined ? { custos } : {}),
+        ...(folha !== undefined ? { folha } : {}),
       });
-      abrirSimulacao(data.calculo);
+      abrirSimulacao({ ...data.calculo, detalhe: data.detalhe });
       navigate("/comparativo");
     } catch (error) {
       setErro(error.response?.status === 401
@@ -60,6 +63,8 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
                 <option value="advogado">Advogado(a)</option>
+                <option value="medico">Médico(a)</option>
+                <option value="dentista">Dentista</option>
               </select>
             </div>
             <div>
@@ -71,6 +76,13 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
               <input id="custos" name="custos" type="number" min="0" step="0.01" value={formulario.custos} onChange={atualizarCampo} className={campoClass} />
             </div>
           </div>
+          {["medico", "dentista"].includes(formulario.profissao) && (
+            <div>
+              <label htmlFor="folha" className="block mb-2 font-medium">Folha mensal para o Fator R (R$)</label>
+              <input id="folha" name="folha" type="number" min="0" step="0.01" required value={formulario.folha} onChange={atualizarCampo} className={campoClass} />
+              <p className="mt-1 text-sm text-gray-600">Informe o total mensal de folha considerado pelo cálculo do Fator R.</p>
+            </div>
+          )}
           {!token && <p>Para calcular e salvar sua simulação, <Link to="/login" className="underline">entre na sua conta</Link> ou <Link to="/cadastro" className="underline">cadastre-se</Link>. Os campos preenchidos serão mantidos durante a navegação.</p>}
           {erro && <p role="alert" className="text-red-700">{erro} <Link to="/login" className="underline">Entrar</Link></p>}
           <button type="submit" disabled={calculando} className="w-full bg-naf-red text-white font-bold py-4 rounded-xl disabled:opacity-60">

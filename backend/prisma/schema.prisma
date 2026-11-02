@@ -25,6 +25,9 @@ model Calculo {
   tipoProfissao  String
   faturamento    Float
   custos         Float?
+  folha          Float?
+  fatorR         Float?
+  anexo          String?
   impostoPF      Float
   impostoPJ      Float
   melhorOpcao    String   // "PF" ou "PJ"

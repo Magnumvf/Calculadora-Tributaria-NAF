@@ -2,11 +2,13 @@ import { useState, useEffect } from "react";
 import Footer from "../components/Footer";
 import { useNavigate } from "react-router-dom";
 import api from "../services/api";
+import { gerarCsvHistorico, nomeArquivoHistorico } from "../utils/historicoCsv";
 
 export default function Historico({ abrirSimulacao }) {
   const [calculos, setCalculos] = useState([]);
   const [carregando, setCarregando] = useState(true);
   const [erro, setErro] = useState("");
+  const [mensagemExportacao, setMensagemExportacao] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   
   const token = localStorage.getItem("token");
@@ -38,6 +40,30 @@ export default function Historico({ abrirSimulacao }) {
 
     if (token) buscarHistorico();
   }, [token]);
+
+  const exportarHistorico = () => {
+    if (calculos.length === 0) {
+      setMensagemExportacao("Não há simulações para exportar.");
+      return;
+    }
+
+    try {
+      const arquivo = new Blob([gerarCsvHistorico(calculos)], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(arquivo);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = nomeArquivoHistorico();
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      setMensagemExportacao(`${calculos.length} simulação(ões) exportada(s).`);
+    } catch (exportError) {
+      console.error("Erro ao exportar histórico:", exportError);
+      setMensagemExportacao("Não foi possível gerar o arquivo CSV.");
+    }
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-[#EFEFEF]">
@@ -73,8 +99,20 @@ export default function Historico({ abrirSimulacao }) {
               </button>
             </div>
           ) : (
-            <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-inner">
-              <table className="min-w-full text-sm text-gray-700">
+            <>
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <p className="text-sm text-gray-600">A exportação inclui todos os registros carregados do seu histórico.</p>
+                <button
+                  type="button"
+                  onClick={exportarHistorico}
+                  className="rounded-xl bg-naf-blue px-5 py-2.5 font-bold text-white shadow-sm transition hover:bg-[#0c1825] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red"
+                >
+                  Exportar histórico ({calculos.length})
+                </button>
+              </div>
+              <p className={`mb-3 min-h-5 text-sm ${mensagemExportacao.startsWith("Não foi") ? "text-naf-red" : "text-green-700"}`} role="status" aria-live="polite">{mensagemExportacao}</p>
+              <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-inner">
+                <table className="min-w-full text-sm text-gray-700">
                 <thead className="bg-[#132436] text-white text-xs uppercase tracking-wider">
                   <tr>
                     <th className="py-4 px-4 text-left">Data</th>
@@ -112,7 +150,7 @@ export default function Historico({ abrirSimulacao }) {
                       <td className="py-4 px-4 text-center">
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase ${
                           item.melhorOpcao.includes("PJ") 
-                            ? "bg-green-50 text-green-700 border border-green-200" 
+                            ? "bg-red-50 text-[#CD371F] border border-red-200"
                             : "bg-blue-50 text-blue-700 border border-blue-200"
                         }`}>
                           {item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}
@@ -130,8 +168,9 @@ export default function Historico({ abrirSimulacao }) {
                     </tr>
                   ))}
                 </tbody>
-              </table>
-            </div>
+                </table>
+              </div>
+            </>
           )}
         </div>
       </main>
