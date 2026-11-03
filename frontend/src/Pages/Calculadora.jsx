@@ -10,6 +10,8 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
   const token = localStorage.getItem("token");
   const campoClass = "w-full border border-gray-300 px-4 py-3 rounded-xl focus:ring-2 focus:ring-naf-red";
 
+  const usaFatorR = formulario.profissao === "medico" || formulario.profissao === "dentista";
+
   function atualizarCampo(event) {
     const { name, value } = event.target;
     setFormulario((anterior) => ({ ...anterior, [name]: value }));
@@ -28,6 +30,20 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
       setErro("Informe renda maior que zero até R$ 15.000 e custos iguais ou maiores que zero.");
       return;
     }
+
+    let folha;
+    if (usaFatorR) {
+      if (formulario.folha === "" || formulario.folha === undefined || formulario.folha === null) {
+        setErro("Para médico e dentista, informe a folha de pagamento / pró-labore.");
+        return;
+      }
+      folha = Number(formulario.folha);
+      if (!Number.isFinite(folha) || folha < 0) {
+        setErro("Informe uma folha de pagamento válida (igual ou maior que zero).");
+        return;
+      }
+    }
+
     setErro("");
     setCalculando(true);
     try {
@@ -35,6 +51,7 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
         tipoProfissao: formulario.profissao,
         faturamento,
         custos,
+        folha: usaFatorR ? folha : undefined,
       });
       abrirSimulacao(data.calculo);
       navigate("/comparativo");
@@ -60,6 +77,8 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
                 <option value="psicologo">Psicólogo(a)</option>
                 <option value="arquiteto">Arquiteto(a)</option>
                 <option value="advogado">Advogado(a)</option>
+                <option value="medico">Médico(a)</option>
+                <option value="dentista">Dentista</option>
               </select>
             </div>
             <div>
@@ -71,8 +90,15 @@ export default function Calculadora({ formulario, setFormulario, abrirSimulacao 
               <input id="custos" name="custos" type="number" min="0" step="0.01" value={formulario.custos} onChange={atualizarCampo} className={campoClass} />
             </div>
           </div>
+          {usaFatorR && (
+            <div>
+              <label htmlFor="folha" className="block mb-2 font-medium">Folha de pagamento / pró-labore mensal (R$)</label>
+              <input id="folha" name="folha" type="number" min="0" step="0.01" value={formulario.folha} onChange={atualizarCampo} className={campoClass} />
+              <p className="text-sm text-gray-500 mt-1">Usada no Fator R (folha ÷ receita): a partir de 28% aplica-se o Anexo III (6%); abaixo de 28%, o Anexo V (15,5%).</p>
+            </div>
+          )}
           {!token && <p>Para calcular e salvar sua simulação, <Link to="/login" className="underline">entre na sua conta</Link> ou <Link to="/cadastro" className="underline">cadastre-se</Link>. Os campos preenchidos serão mantidos durante a navegação.</p>}
-          {erro && <p role="alert" className="text-red-700">{erro} <Link to="/login" className="underline">Entrar</Link></p>}
+          {erro && <p role="alert" className="text-red-700">{erro}</p>}
           <button type="submit" disabled={calculando} className="w-full bg-naf-red text-white font-bold py-4 rounded-xl disabled:opacity-60">
             {calculando ? "Calculando..." : "Analisar vantagem tributária"}
           </button>

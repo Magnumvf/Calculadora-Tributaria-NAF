@@ -90,6 +90,10 @@ export default function Comparativo({ simulacao }) {
                   <div className="p-5 rounded-xl border-2 shadow-md" style={{ borderColor: resultado.siglaVencedora === 'PJ' ? '#22c55e' : '#e5e7eb', backgroundColor: resultado.siglaVencedora === 'PJ' ? '#ffffff' : '#f3f4f6', opacity: resultado.siglaVencedora === 'PJ' ? 1 : 0.7 }}>
                     <h3 className="font-bold text-xl text-[#132436] mb-4 border-b border-[#e5e7eb] pb-2 flex items-center justify-between">Pessoa Jurídica (PJ) {resultado.siglaVencedora === 'PJ' && <span className="text-xs bg-[#f0fdf4] text-[#15803d] px-2 py-1 rounded-full uppercase">Recomendado</span>}</h3>
                     <div className="space-y-3 text-sm text-[#374151]">
+                      <div className="flex justify-between"><span>Enquadramento:</span> <span className="font-semibold">{resultado.pj.anexo}</span></div>
+                      {resultado.pj.fatorR !== null && (
+                        <div className="flex justify-between"><span>Fator R:</span> <span className="font-semibold">{(resultado.pj.fatorR * 100).toFixed(2).replace(".", ",")}%</span></div>
+                      )}
                       <div className="flex justify-between"><span>Simples ({resultado.pj.aliquota}):</span> <span className="font-semibold">R$ {resultado.pj.simples.toFixed(2)}</span></div>
                       <div className="flex justify-between"><span>Pró-labore base:</span> <span className="font-semibold">R$ {resultado.pj.salarioBase.toFixed(2)}</span></div>
                       <div className="flex justify-between"><span>INSS Mensal (11%):</span> <span className="font-semibold">R$ {resultado.pj.inss.toFixed(2)}</span></div>
