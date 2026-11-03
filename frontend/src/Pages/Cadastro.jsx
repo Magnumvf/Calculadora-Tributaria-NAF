@@ -9,6 +9,8 @@ export default function Cadastro() {
   const [isVisible, setIsVisible] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [erroServidor, setErroServidor] = useState("");
+  const [enviando, setEnviando] = useState(false);
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -39,16 +41,17 @@ export default function Cadastro() {
       return;
     }
     setErrors({});
+    setErroServidor("");
+    setEnviando(true);
 
     try {
       await api.post("/auth/register", { name, email, password });
-
-      alert("Cadastro realizado com sucesso! Agora você pode fazer o login.");
-      navigate("/login");
+      navigate("/login", { state: { notice: "Cadastro realizado com sucesso. Entre com sua conta." } });
 
     } catch (error) {
-      const mensagemErro = error.response?.data?.error || "Erro ao conectar com o servidor.";
-      alert(mensagemErro);
+      setErroServidor(error.response?.data?.error || "Erro ao conectar com o servidor.");
+    } finally {
+      setEnviando(false);
     }
   };
 
@@ -61,7 +64,7 @@ export default function Cadastro() {
   }, []);
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4">
+    <main className="flex min-h-screen flex-col items-center justify-center bg-naf-light p-4">
       <h1
         className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[100ms]
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
@@ -70,7 +73,7 @@ export default function Cadastro() {
       </h1>
 
       <div
-        className={`w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl border border-naf-gray/30 transition-all duration-[700ms] ease-out
+        className={`w-full max-w-sm rounded-2xl border border-naf-gray/30 bg-white p-6 shadow-xl transition-all duration-[700ms] ease-out sm:p-8
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
@@ -80,6 +83,7 @@ export default function Cadastro() {
         >
           Criar Conta
         </h2>
+        {erroServidor && <p role="alert" aria-live="assertive" className="mb-4 text-sm text-red-700">{erroServidor}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div
@@ -179,9 +183,10 @@ export default function Cadastro() {
           >
             <button
               type="submit"
-              className="w-full bg-naf-red text-white font-bold py-3 rounded-xl hover:bg-[#a62b18] transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 shadow-md cursor-pointer"
+              disabled={enviando}
+              className="w-full cursor-pointer rounded-xl bg-naf-red py-3 font-bold text-white shadow-md transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 hover:bg-[#a62b18] disabled:cursor-wait disabled:opacity-60"
             >
-              Cadastrar
+              {enviando ? "Cadastrando..." : "Cadastrar"}
             </button>
           </div>
         </form>
@@ -200,6 +205,6 @@ export default function Cadastro() {
           </button>
         </p>
       </div>
-    </div>
+    </main>
   );
 }

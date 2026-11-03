@@ -1,3 +1,4 @@
+import ContatoNaf from "../components/ContatoNaf";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
@@ -7,16 +8,9 @@ export default function Home() {
   const [isVisible, setIsVisible] = useState(false);
   const token = localStorage.getItem("token");
 
-  const [formData, setFormData] = useState({
-    nome: "",
-    email: "",
-    mensagem: "",
-  });
-  const [enviando, setEnviando] = useState(false);
-
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login", { replace: true, state: { from: "/Home" } });
     }
   }, [token, navigate]);
 
@@ -29,36 +23,6 @@ export default function Home() {
 
   const handleNavigate = (path) => {
     navigate(path);
-  };
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setEnviando(true);
-
-    try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3000'}/send-email`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        alert('Mensagem enviada com sucesso ao NAF!');
-        setFormData({ nome: "", email: "", mensagem: "" });
-      } else {
-        alert('Houve um erro ao enviar a mensagem. Tente novamente.');
-      }
-    } catch (error) {
-      console.error("Erro:", error);
-      alert('Erro de conexão com o servidor. Como o backend da NP3 não está rodando, a simulação visual funcionou!');
-      setFormData({ nome: "", email: "", mensagem: "" });
-    } finally {
-      setEnviando(false);
-    }
   };
 
   return (
@@ -82,7 +46,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-naf-blue/10 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-naf-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold text-naf-blue mb-2">Pessoa Física (PF)</h3>
+                <h2 className="text-xl font-bold text-naf-blue mb-2">Pessoa Física (PF)</h2>
                 <p className="text-sm text-naf-gray mb-6">
                   Cálculo baseado na tabela do IRPF mensal. Permite abater despesas dedutíveis (Livro Caixa) da sua base de cálculo.
                 </p>
@@ -98,7 +62,7 @@ export default function Home() {
                 <div className="w-12 h-12 bg-naf-blue/10 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-naf-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold text-naf-blue mb-2">Pessoa Jurídica (PJ)</h3>
+                <h2 className="text-xl font-bold text-naf-blue mb-2">Pessoa Jurídica (PJ)</h2>
                 <p className="text-sm text-naf-gray mb-6">
                   Cálculo focado no Simples Nacional e Contribuição Previdenciária (INSS) sobre o pró-labore da sua categoria.
                 </p>
@@ -115,12 +79,12 @@ export default function Home() {
                 <div className="w-12 h-12 bg-naf-red/10 rounded-full flex items-center justify-center mb-4">
                   <svg className="w-6 h-6 text-naf-red" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
                 </div>
-                <h3 className="text-xl font-bold text-naf-blue mb-2">Comparativo Completo</h3>
+                <h2 className="text-xl font-bold text-naf-blue mb-2">Comparativo Completo</h2>
                 <p className="text-sm text-naf-gray mb-6">
                   Analise PF e PJ lado a lado. Descubra a opção mais vantajosa para sua renda e gere um relatório em PDF.
                 </p>
               </div>
-              <button onClick={() => handleNavigate("/comparativo")} className="w-full py-3 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition-colors cursor-pointer">
+              <button onClick={() => handleNavigate("/")} className="w-full py-3 bg-naf-red text-white font-bold rounded-xl hover:bg-[#a62b18] transition-colors cursor-pointer">
                 Gerar Comparativo
               </button>
             </div>
@@ -223,63 +187,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SEÇÃO 3: CONTATO NAF */}
-        <section className={`w-full max-w-2xl bg-white rounded-3xl shadow-lg border border-naf-gray/20 p-8 mb-4 transition-all duration-[700ms] ease-out delay-[1200ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}>
-          <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-naf-blue">Fale com o NAF</h2>
-            <p className="text-sm text-naf-gray mt-1">Sua situação é muito complexa? Envie uma mensagem para nossa equipe.</p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-4 text-left">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="contato-nome" className="block text-sm font-medium text-naf-blue mb-1">Nome Completo</label>
-                <input
-                  id="contato-nome"
-                  type="text"
-                  name="nome"
-                  autoComplete="name"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition"
-                />
-              </div>
-              <div>
-                <label htmlFor="contato-email" className="block text-sm font-medium text-naf-blue mb-1">E-mail</label>
-                <input
-                  id="contato-email"
-                  type="email"
-                  name="email"
-                  autoComplete="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                  className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition"
-                />
-              </div>
-            </div>
-            <div>
-              <label htmlFor="contato-mensagem" className="block text-sm font-medium text-naf-blue mb-1">Sua Mensagem / Dúvida</label>
-              <textarea
-                id="contato-mensagem"
-                name="mensagem"
-                value={formData.mensagem}
-                onChange={handleChange}
-                required
-                rows="3"
-                className="w-full border border-naf-gray px-4 py-2 rounded-xl focus:ring-2 focus:ring-naf-red outline-none transition resize-none"
-              ></textarea>
-            </div>
-            <button
-              type="submit"
-              disabled={enviando}
-              className={`cursor-pointer w-full bg-naf-blue text-white py-3 rounded-xl hover:bg-[#0c1825] transition-all duration-[400ms] ease-out text-base font-bold shadow-md ${enviando ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[1.02]'}`}
-            >
-              {enviando ? "Enviando para o NAF..." : "Enviar Mensagem"}
-            </button>
-          </form>
-        </section>
+        <ContatoNaf />
 
       </main>
 

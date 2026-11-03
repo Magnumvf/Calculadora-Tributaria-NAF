@@ -1,3 +1,4 @@
+import ContatoNaf from "../components/ContatoNaf";
 import Footer from "../components/Footer";
 
 export default function Sobre() {
@@ -31,6 +32,7 @@ export default function Sobre() {
             </li>
           </ul>
         </div>
+        <ContatoNaf />
       </main>
       <Footer />
     </div>

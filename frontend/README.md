@@ -32,45 +32,68 @@ Se preferir rodar ou testar apenas a interface do React de forma isolada sem o D
     npm run dev
     ```
 
-## Base de navegação — M1
+## Navegação e estado — M1
 
-O React Router já faz parte das dependências. As rotas ficam em `src/App.jsx`,
-e o menu compartilhado em `src/components/Navbar.jsx`. O menu é renderizado
-uma única vez, acima das páginas, incluindo login e página 404.
+As rotas e o estado compartilhado ficam em `src/App.jsx`. O menu é renderizado
+uma única vez em `src/components/Navbar.jsx`, inclusive no login e na página 404.
+Não foi adicionada biblioteca de gerenciamento de estado.
 
-| Rota | Componente | Estado nesta etapa |
+| Rota | Componente | Função |
 | --- | --- | --- |
-| `/` | `Landing` | Entrada existente |
-| `/Home` | `Home` | Painel existente e contato com o NAF |
-| `/calculo-pf` | `CalculoPF` | Calculadora PF existente |
-| `/calculo-pj` | `CalculoPJ` | Calculadora PJ existente |
-| `/comparativo` | `Comparativo` | Formulário e resultado existentes |
-| `/historico` | `Historico` | Histórico existente conectado à API |
-| `/faq` | `Faq` | Perguntas frequentes em seções acessíveis |
-| `/sobre` | `Sobre` | Informações do NAF e links institucionais |
-| `/login`, `/cadastro`, `/RecuperarSenha` | Páginas de acesso | Fluxo existente |
+| `/` | `Calculadora` | Formulário do comparativo |
+| `/comparativo` | `Comparativo` | Resultado, PDF e envio por e-mail |
+| `/historico` | `Historico` | Simulações da conta e botão para reabrir o resultado |
+| `/faq` | `Faq` | Perguntas frequentes |
+| `/sobre` | `Sobre` | Informações do NAF e formulário de contato |
+| `/inicio` | `Landing` | Página de apresentação anterior preservada |
+| `/Home` | `Home` | Painel anterior e contato com o NAF |
+| `/calculo-pf`, `/calculo-pj` | `CalculoPF`, `CalculoPJ` | Calculadoras individuais existentes |
+| `/login`, `/cadastro`, `/RecuperarSenha` | Páginas de acesso | Fluxo de autenticação |
 | Qualquer outra rota | `NaoEncontrada` | Página 404 |
 
-As calculadoras e o histórico dependem do backend e de uma sessão autenticada.
-Nesta primeira tarefa, o fluxo existente foi mantido. Nas próximas tarefas de
-M1, o formulário passará para `/`, o resultado para `/comparativo`, com estado
-compartilhado e redirecionamento quando não houver simulação.
+Painel, Cálculo PF, Cálculo PJ e Histórico exigem login. Sem sessão, levam a
+`/login` e, após autenticar, retornam à página solicitada. O botão Entrar
+continua levando ao formulário após o login.
 
-M2 pode trabalhar nas calculadoras existentes; M3 encontra o PDF em
-`src/Pages/Comparativo.jsx`; M4 trabalha responsividade, acessibilidade e QA.
-As páginas `Faq.jsx` e `Sobre.jsx` já têm conteúdo inicial. Coordenem alterações
-em `Comparativo.jsx`, pois a separação do formulário e do resultado também
-afetará esse arquivo.
+O formulário mantém os campos ao navegar pelo menu ou pelo login. O cálculo
+continua exigindo autenticação e é salvo pela API existente. Após o sucesso,
+`abrirSimulacao` atualiza o estado do App e a navegação leva a `/comparativo`.
+Voltar ao formulário mantém os valores; reabrir pelo histórico não cria um novo
+registro. O histórico continua consultando os registros da conta no banco.
 
-Para verificar a base:
+O estado do formulário e do resultado é mantido em memória, sendo limpo ao sair
+ou recarregar a página. Acesso a `/comparativo` sem resultado redireciona para `/`
+com `replace`; o usuário autenticado pode reabrir os registros pelo histórico.
+
+Pontos de trabalho dos colegas:
+- M2: `Pages/Calculadora.jsx`, `utils/resultadoComparativo.js` e o motor existente
+  no backend. O utilitário preserva a memória de cálculo anterior; não revisa as
+  regras tributárias. Totais e registros vêm da API.
+- M3: PDF e apresentação em `Pages/Comparativo.jsx`.
+- M4: conteúdo em `Faq.jsx`/`Sobre.jsx` e acessibilidade das páginas.
+
+O contato compartilhado está em `components/ContatoNaf.jsx`. Os dois envios de
+e-mail usam as rotas `/emails/naf` e `/emails/comparativo` e exigem login. O
+backend precisa das variáveis SMTP e do destinatário NAF; consulte seu README.
+Falhas são exibidas ao usuário sem apagar a mensagem de contato.
+
+O menu responsivo abre abaixo do breakpoint `md`, fecha com `Escape` e devolve
+o foco ao botão do menu. O link de salto leva ao contêiner `#conteudo-principal`.
+O tema pode ser alternado no menu e é salvo no navegador; o relatório PDF é
+mantido em cores de papel para continuar legível nos dois temas.
+
+Resultados da auditoria Lighthouse e limitações dos fluxos não executados:
+[`docs/acessibilidade/auditoria-m4.md`](../docs/acessibilidade/auditoria-m4.md).
+
+Validação local:
 
 ```bash
 npm ci
 npm run build
+npm run lint
 npm run dev
 ```
 
-Abra o endereço informado pelo Vite e confira o menu, `/faq`, `/sobre` e um
-endereço inexistente. Para validar as funcionalidades conectadas, execute também
-o backend conforme o README da raiz. Na hospedagem, o servidor precisa servir
-`index.html` para as rotas do frontend (fallback de SPA do BrowserRouter).
+Para testar cálculos e histórico reais, execute também a API e o banco. Na
+hospedagem, o servidor precisa servir `index.html` nas rotas do frontend
+(fallback de SPA do BrowserRouter).

@@ -1,12 +1,18 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [erroServidor, setErroServidor] = useState("");
+  const [enviando, setEnviando] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const destino = ["/Home", "/calculo-pf", "/calculo-pj", "/historico"].includes(location.state?.from)
+    ? location.state.from
+    : "/";
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -37,6 +43,8 @@ export default function Login() {
     }
 
     setErrors({});
+    setErroServidor("");
+    setEnviando(true);
 
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -44,18 +52,18 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      alert("Login realizado com sucesso!");
-      navigate("/Home");
+      navigate(destino, { replace: true });
 
     } catch (error) {
-      const mensagemErro = error.response?.data?.error || "Erro ao conectar ao servidor.";
-      alert(mensagemErro);
+      setErroServidor(error.response?.data?.error || "Erro ao conectar ao servidor.");
+    } finally {
+      setEnviando(false);
     }
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4"
+    <main
+      className="flex min-h-screen flex-col items-center justify-center bg-naf-light p-4"
     >
       <h1
         className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms]
@@ -65,7 +73,7 @@ export default function Login() {
       </h1>
 
       <div
-        className={`w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl transition-all duration-[700ms] ease-out delay-[300ms] border border-naf-gray/30
+        className={`w-full max-w-sm rounded-2xl border border-naf-gray/30 bg-white p-6 shadow-xl transition-all duration-[700ms] ease-out delay-[300ms] sm:p-8
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
@@ -75,6 +83,14 @@ export default function Login() {
         >
           Login
         </h2>
+
+        {destino !== "/" && (
+          <p className="mb-4 text-sm text-naf-blue" role="status">
+            Entre na sua conta para acessar a página solicitada.
+          </p>
+        )}
+        {location.state?.notice && <p role="status" aria-live="polite" className="mb-4 text-sm text-green-700">{location.state.notice}</p>}
+        {erroServidor && <p role="alert" aria-live="assertive" className="mb-4 text-sm text-red-700">{erroServidor}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div
@@ -142,9 +158,10 @@ export default function Login() {
           >
             <button
               type="submit"
-              className="w-full bg-naf-red text-white font-bold py-3 rounded-xl hover:bg-[#a62b18] transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 shadow-md"
+              disabled={enviando}
+              className="w-full rounded-xl bg-naf-red py-3 font-bold text-white shadow-md transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 hover:bg-[#a62b18] disabled:cursor-wait disabled:opacity-60"
             >
-              Entrar
+              {enviando ? "Entrando..." : "Entrar"}
             </button>
           </div>
         </form>
@@ -155,9 +172,9 @@ export default function Login() {
           }`}
         >
           Não tem conta?{" "}
-          <a href="/Cadastro" className="text-naf-red hover:underline font-bold">
+          <Link to="/cadastro" className="text-naf-red hover:underline font-bold">
             Cadastre-se
-          </a>
+          </Link>
         </p>
 
         <p
@@ -166,18 +183,12 @@ export default function Login() {
           }`}
         >
           Esqueceu a senha?{" "}
-          <a href="/RecuperarSenha" className="text-naf-red hover:underline font-bold">
+          <Link to="/RecuperarSenha" className="text-naf-red hover:underline font-bold">
             Recuperar Senha
-          </a>
+          </Link>
         </p>
       </div>
 
-      <h2
-        className={`block mb-2 mt-6 text-sm font-medium text-naf-gray p-1 transition-all duration-[700ms] ease-out delay-[1350ms] ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
-      >
-      </h2>
-    </div>
+    </main>
   );
 }
