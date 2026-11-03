@@ -20,7 +20,7 @@ export default function CalculoPJ() {
 
   useEffect(() => {
     if (!token) {
-      navigate("/");
+      navigate("/login", { replace: true, state: { from: "/calculo-pj" } });
     }
   }, [token, navigate]);
 

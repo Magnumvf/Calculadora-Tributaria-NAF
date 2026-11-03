@@ -1,7 +1,7 @@
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
 const links = [
-  ["/", "Início"],
+  ["/", "Calculadora"],
   ["/Home", "Painel"],
   ["/calculo-pf", "Cálculo PF"],
   ["/calculo-pj", "Cálculo PJ"],
@@ -11,13 +11,14 @@ const links = [
   ["/sobre", "Sobre"],
 ];
 
-export default function Navbar() {
+export default function Navbar({ onLogout }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    onLogout();
     navigate("/");
   };
 
