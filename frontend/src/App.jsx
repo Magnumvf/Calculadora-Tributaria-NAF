@@ -25,7 +25,7 @@ function App() {
 
   function abrirSimulacao(calculo) {
     setSimulacao({ calculo, resultado: resultadoComparativo(calculo) });
-        setFormulario({ profissao: calculo.tipoProfissao, renda: String(calculo.faturamento), custos: String(calculo.custos ?? 0), folha: calculo.folha != null ? String(calculo.folha) : "" });
+    setFormulario({ profissao: calculo.tipoProfissao, renda: String(calculo.faturamento), custos: String(calculo.custos ?? 0), folha: calculo.folha != null ? String(calculo.folha) : "" });
   }
 
   function limparSessao() {

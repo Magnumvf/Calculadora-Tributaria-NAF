@@ -42,7 +42,8 @@ router.post('/comparativo', authMiddleware, async (req, res) => {
   try {
     const calculo = await prisma.calculo.findFirst({ where: { id: calculoId, userId: req.userId } });
     if (!calculo) return res.status(404).json({ error: 'Simulação não encontrada.' });
-    const moeda = (valor) => Number(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const moeda = (valor) => valor == null ? 'Não informado' : Number(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const percentual = calculo.fatorR == null ? null : new Intl.NumberFormat('pt-BR', { style: 'percent', minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(calculo.fatorR);
     await enviar({
       to: email,
       subject: 'Seu comparativo tributário — NAF',
@@ -55,6 +56,11 @@ router.post('/comparativo', authMiddleware, async (req, res) => {
         `Tributação PJ: ${moeda(calculo.impostoPJ)}`,
         `Regime indicado: ${calculo.melhorOpcao}`,
         `Economia mensal: ${moeda(calculo.economiaMensal)}`,
+        ...(calculo.fatorR == null ? [] : [
+          `Folha informada: ${moeda(calculo.folha)}`,
+          `Fator R: ${percentual}`,
+          `Anexo tributário: ${calculo.anexo || 'Não registrado'}`,
+        ]),
         'Os valores são estimativas.',
       ].join('\n'),
     });
