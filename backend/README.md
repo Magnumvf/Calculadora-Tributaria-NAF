@@ -72,16 +72,16 @@ mensagem }`, envia ao destinatário fixo `NAF_EMAIL` e define o e-mail do usuár
 como endereço de resposta. Sucesso indica aceite pelo servidor SMTP, não uma
 garantia de entrega na caixa de entrada.
 
-Como foi adicionada uma dependência, em ambientes Docker já existentes atualize
-o volume de dependências antes de reiniciar o backend:
+Para iniciar ou atualizar o ambiente Docker, execute na raiz:
 
 ```bash
-docker compose run --rm --no-deps backend npm ci
 docker compose up --build
 ```
 
-Não é necessário apagar o volume do PostgreSQL. Em uma instalação nova,
-`docker compose up --build` já instala as dependências.
+Frontend e backend executam `npm ci` antes de iniciar, atualizando inclusive
+volumes de dependências reutilizados. Isso requer acesso ao registro npm e pode
+demorar um pouco em cada inicialização. Não é necessário apagar volumes nem
+instalar dependências manualmente. O volume do PostgreSQL é preservado.
 
 ## Recuperação de senha
 
@@ -97,15 +97,14 @@ APP_URL=http://localhost:5173
 Use o endereço do frontend acessível por quem receber o e-mail. Em produção,
 use a URL pública HTTPS; localhost só funciona na própria máquina.
 
-Para atualizar uma instalação Docker com o backend em execução, rode na raiz:
+Para atualizar uma instalação Docker, rode na raiz:
 
 ```bash
-docker compose exec backend npm ci
-docker compose up -d --force-recreate backend
+docker compose up --build
 ```
 
 O script de inicialização gera o cliente Prisma e aplica a nova migração sem
-apagar usuários ou cálculos. Em instalação nova, use `docker compose up --build`.
+apagar usuários ou cálculos.
 
 - `POST /auth/forgot-password`, corpo `{ "email": "usuario@example.com" }`:
   retorna uma mensagem genérica para não revelar contas cadastradas. O envio
