@@ -49,3 +49,25 @@ test("não inventa detalhamento nem substitui custos ausentes por zero", () => {
   assert.equal(resultado.pj.fatorR, null);
   assert.equal(resultado.pj.salarioBase, null);
 });
+
+test("usa alíquota, anexo e Fator R persistidos pela M2 ao reabrir o histórico", () => {
+  const resultado = resultadoComparativo({
+    faturamento: 10000,
+    custos: 500,
+    tipoProfissao: "dentista",
+    folha: 2799,
+    fatorR: 0.2799,
+    anexo: "Anexo V",
+    aliquotaPJ: 0.155,
+    impostoPF: 1700,
+    impostoPJ: 1880,
+    melhorOpcao: "Pessoa Física (PF)",
+    economiaMensal: 180,
+  });
+
+  assert.equal(resultado.pj.anexo, "Anexo V");
+  assert.equal(resultado.pj.fatorR, 0.2799);
+  assert.equal(resultado.pj.aliquota, "15,5%");
+  assert.equal(resultado.pj.simples, 1550);
+  assert.equal(resultado.pj.total, 1880);
+});

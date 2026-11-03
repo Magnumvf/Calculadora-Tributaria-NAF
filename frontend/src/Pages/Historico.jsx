@@ -121,6 +121,9 @@ export default function Historico({ abrirSimulacao }) {
                     <th className="py-4 px-4 text-left">Livro Caixa (PF)</th>
                     <th className="py-4 px-4 text-left">Imposto PF</th>
                     <th className="py-4 px-4 text-left">Imposto PJ</th>
+                    <th className="py-4 px-4 text-left">Folha</th>
+                    <th className="py-4 px-4 text-left">Fator R</th>
+                    <th className="py-4 px-4 text-left">Anexo PJ</th>
                     <th className="py-4 px-4 text-center">Melhor Opção</th>
                     <th className="py-4 px-4 text-right">Economia</th>
                     <th className="py-4 px-4 text-left">Comparativo</th>
@@ -147,6 +150,13 @@ export default function Historico({ abrirSimulacao }) {
                       <td className="py-4 px-4 text-[#CD371F] font-medium">
                         R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
+                      <td className="py-4 px-4 text-gray-500">
+                        {item.folha == null ? "—" : `R$ ${item.folha.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+                      </td>
+                      <td className="py-4 px-4 text-gray-500">
+                        {item.fatorR == null ? "—" : new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(item.fatorR)}
+                      </td>
+                      <td className="py-4 px-4 text-gray-500">{item.anexo || "—"}</td>
                       <td className="py-4 px-4 text-center">
                         <span className={`inline-block px-3 py-1 rounded-full text-xs font-bold uppercase ${
                           item.melhorOpcao.includes("PJ") 

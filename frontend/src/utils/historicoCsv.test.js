@@ -11,6 +11,7 @@ test("gera CSV com BOM, separador brasileiro e campos M2 disponíveis", () => {
     folha: 2800,
     fatorR: 0.28,
     anexo: "Anexo III",
+    aliquotaPJ: 0.06,
     impostoPF: 900,
     impostoPJ: 908,
     melhorOpcao: "Pessoa Física (PF)",
@@ -22,6 +23,7 @@ test("gera CSV com BOM, separador brasileiro e campos M2 disponíveis", () => {
   assert.ok(csv.includes('"10.000,00"'));
   assert.ok(csv.includes('"28,0%"'));
   assert.ok(csv.includes('"Anexo III"'));
+  assert.ok(csv.includes('"6,0%"'));
   assert.ok(csv.includes('"Pessoa Física (PF)"'));
 });
 

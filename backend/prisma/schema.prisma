@@ -14,6 +14,10 @@ model User {
   password  String
   createdAt DateTime   @default(now())
   calculos  Calculo[]
+  resetTokenHash String? @unique
+  resetTokenExpiresAt DateTime?
+  resetRequestedAt DateTime?
+  sessionVersion Int @default(0)
 
   @@map("users")
 }
@@ -25,13 +29,14 @@ model Calculo {
   tipoProfissao  String
   faturamento    Float
   custos         Float?
-  folha          Float?
-  fatorR         Float?
-  anexo          String?
   impostoPF      Float
   impostoPJ      Float
   melhorOpcao    String   // "PF" ou "PJ"
   economiaMensal Float
+  folha          Float?
+  fatorR         Float?
+  anexo          String?
+  aliquotaPJ     Float?
   createdAt      DateTime @default(now())
 
   @@map("calculos")

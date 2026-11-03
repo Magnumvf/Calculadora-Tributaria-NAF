@@ -27,6 +27,7 @@ const colunas = [
   ["Folha mensal para Fator R (R$)", (item) => formatarMoeda(item.folha)],
   ["Fator R", (item) => item.fatorR == null ? "" : new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(item.fatorR)],
   ["Anexo tributário", (item) => item.anexo || ""],
+  ["Alíquota PJ", (item) => item.aliquotaPJ == null ? "" : new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(item.aliquotaPJ)],
   ["Imposto PF (R$)", (item) => formatarMoeda(item.impostoPF)],
   ["Imposto PJ (R$)", (item) => formatarMoeda(item.impostoPJ)],
   ["Cenário mais vantajoso", (item) => item.melhorOpcao || ""],
