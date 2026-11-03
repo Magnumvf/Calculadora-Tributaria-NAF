@@ -70,7 +70,7 @@ login: async (req, res) => {
       }
 
       const token = jwt.sign(
-        { id: user.id }, 
+        { id: user.id, sessionVersion: user.sessionVersion },
         process.env.JWT_SECRET || 'fallback_secret', 
         { expiresIn: '1d' }
       );

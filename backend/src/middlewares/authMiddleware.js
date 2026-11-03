@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
+const prisma = require('../config/prisma');
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {
@@ -18,12 +19,19 @@ const authMiddleware = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'fallback_secret');
 
+    if (typeof decoded.id !== 'string') return res.status(401).json({ error: "Token inválido." });
+    const user = await prisma.user.findUnique({ where: { id: decoded.id }, select: { sessionVersion: true } });
+    if (!user || (decoded.sessionVersion ?? 0) !== user.sessionVersion) {
+      return res.status(401).json({ error: "Sessão expirada. Entre novamente." });
+    }
     req.userId = decoded.id;
 
     return next();
 
   } catch (error) {
-    console.error("Erro na validação do JWT:", error.message);
+    if (!(error instanceof jwt.JsonWebTokenError)) {
+      return res.status(503).json({ error: "Não foi possível verificar a sessão. Tente novamente." });
+    }
     return res.status(401).json({ error: "Token inválido ou expirado." });
   }
 };

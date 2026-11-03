@@ -1,118 +1,46 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import api from "../services/api";
 
 export default function RecuperarSenha() {
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const [isVisible, setIsVisible] = useState(false);
-  const navigate = useNavigate();
+  const [erro, setErro] = useState("");
+  const [mensagem, setMensagem] = useState("");
+  const [enviando, setEnviando] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 100);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const validateForm = () => {
-    if (!email) {
-      setError("Por favor, preencha o campo de email.");
-      return false;
+  async function solicitar(event) {
+    event.preventDefault();
+    setErro("");
+    setMensagem("");
+    setEnviando(true);
+    try {
+      const { data } = await api.post("/auth/forgot-password", { email: email.trim() });
+      setMensagem(data.message);
+    } catch (error) {
+      setErro(error.response?.data?.error || "Não foi possível conectar ao servidor. Tente novamente.");
+    } finally {
+      setEnviando(false);
     }
-    if (!/\S+@\S+\.\S+/.test(email)) {
-      setError("Por favor, insira um formato de email válido.");
-      return false;
-    }
-    return true;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) {
-      return;
-    }
-
-    setError("");
-    console.log("Recuperação solicitada para:", email);
-    alert("Se este email estiver cadastrado, enviaremos instruções de recuperação em instantes.");
-    navigate("/");
-  };
+  }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4">
-      <h1
-        className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[100ms]
-          ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
-      >
-        CALCULADORA DE IMPOSTO DE RENDA
-      </h1>
-
-      <div
-        className={`w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl border border-naf-gray/30 transition-all duration-[700ms] ease-out
-          ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
-      >
-        <h2
-          className={`text-2xl font-bold text-center mb-2 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms]
-            ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
-        >
-          Recuperar Senha
-        </h2>
-
-        <p
-          className={`text-center text-sm text-naf-gray mb-6 transition-all duration-[700ms] ease-out delay-[300ms]
-            ${isVisible ? "opacity-100" : "opacity-0"}`}
-        >
-          Informe seu email e enviaremos as instruções para redefinir sua senha de acesso.
-        </p>
-
-        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-          <div
-            className={`transition-all duration-[700ms] ease-out delay-[400ms]
-              ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
-          >
-            <label className="block mb-2 text-sm font-medium text-naf-blue">
-              Email Cadastrado
-            </label>
-            <input
-              type="email"
-              placeholder="Digite seu email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                if (error) setError("");
-              }}
-              className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
-            />
-            {error && <p className="mt-1 text-sm text-naf-red font-medium">{error}</p>}
+    <main className="min-h-screen bg-naf-light px-4 py-12 text-naf-blue">
+      <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg">
+        <h1 className="text-2xl font-bold mb-4">Recuperar senha</h1>
+        <p className="mb-6">Informe seu e-mail cadastrado para receber um link de redefinição válido por 30 minutos.</p>
+        <form onSubmit={solicitar} className="space-y-4">
+          <div>
+            <label htmlFor="recuperar-email" className="block mb-2 font-medium">E-mail cadastrado</label>
+            <input id="recuperar-email" type="email" autoComplete="email" maxLength={254} required value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-naf-blue" />
           </div>
-
-          <div
-            className={`transition-all duration-[700ms] ease-out delay-[500ms]
-              ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"}`}
-          >
-            <button
-              type="submit"
-              className="w-full bg-naf-blue text-white font-bold py-3 rounded-xl hover:bg-[#0c1825] transition duration-[250ms] ease-in-out hover:scale-105 shadow-md cursor-pointer"
-            >
-              Enviar Instruções
-            </button>
-          </div>
-        </form>
-
-        <p
-          className={`text-center text-sm text-naf-gray mt-6 transition-all duration-[700ms] ease-out delay-[600ms]
-            ${isVisible ? "opacity-100" : "opacity-0"}`}
-        >
-          Lembrou sua senha?{" "}
-          <button
-            onClick={() => navigate("/login")}
-            className="text-naf-red hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
-          >
-            Faça login
+          <button disabled={enviando} className="w-full bg-naf-blue text-white p-3 rounded-lg font-bold disabled:opacity-60">
+            {enviando ? "Solicitando..." : "Enviar instruções"}
           </button>
-        </p>
+        </form>
+        {erro && <p role="alert" className="mt-4 text-red-700">{erro}</p>}
+        {mensagem && <div role="status" className="mt-4"><p>{mensagem}</p><p className="mt-2 text-sm">Caso precise tentar novamente, aguarde pelo menos um minuto.</p></div>}
+        <Link to="/login" className="inline-block mt-6 underline font-medium">Voltar ao login</Link>
       </div>
-    </div>
+    </main>
   );
 }
