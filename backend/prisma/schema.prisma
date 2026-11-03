@@ -29,6 +29,10 @@ model Calculo {
   impostoPJ      Float
   melhorOpcao    String   // "PF" ou "PJ"
   economiaMensal Float
+  folha          Float?
+  fatorR         Float?
+  anexo          String?
+  aliquotaPJ     Float?
   createdAt      DateTime @default(now())
 
   @@map("calculos")

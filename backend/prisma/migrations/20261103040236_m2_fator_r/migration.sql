@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "calculos" ADD COLUMN     "aliquotaPJ" DOUBLE PRECISION,
+ADD COLUMN     "anexo" TEXT,
+ADD COLUMN     "fatorR" DOUBLE PRECISION,
+ADD COLUMN     "folha" DOUBLE PRECISION;
