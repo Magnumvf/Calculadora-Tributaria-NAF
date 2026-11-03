@@ -1,3 +1,8 @@
+set -e
+
+echo "Gerando cliente Prisma..."
+npx prisma generate
+
 echo "Executando migrações do Prisma..."
 npx prisma migrate deploy
 

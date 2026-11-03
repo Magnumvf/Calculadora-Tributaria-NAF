@@ -16,7 +16,7 @@ test('e-mails: autenticação, propriedade do cálculo, configuração e respost
   const enviados = [];
   const prismaPath = require.resolve('../src/config/prisma');
   const originalPrisma = require.cache[prismaPath];
-  require.cache[prismaPath] = { exports: { calculo: { findFirst: async (query) => {
+  require.cache[prismaPath] = { exports: { user: { findUnique: async () => ({ sessionVersion: 0 }) }, calculo: { findFirst: async (query) => {
     consulta = query;
     return encontrado ? { tipoProfissao: 'psicologo', faturamento: 5000, custos: 800,
       impostoPF: 269.51, impostoPJ: 478.31, melhorOpcao: 'Pessoa Física (PF)', economiaMensal: 208.8 } : null;
