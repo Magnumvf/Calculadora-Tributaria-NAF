@@ -43,7 +43,7 @@ Não foi adicionada biblioteca de gerenciamento de estado.
 | `/` | `Calculadora` | Formulário do comparativo |
 | `/comparativo` | `Comparativo` | Resultado, PDF e envio por e-mail |
 | `/historico` | `Historico` | Simulações da conta e botão para reabrir o resultado |
-| `/faq` | `Faq` | Esqueleto para conteúdo de M4 |
+| `/faq` | `Faq` | Perguntas frequentes |
 | `/sobre` | `Sobre` | Informações do NAF e formulário de contato |
 | `/inicio` | `Landing` | Página de apresentação anterior preservada |
 | `/Home` | `Home` | Painel anterior e contato com o NAF |
@@ -76,6 +76,14 @@ O contato compartilhado está em `components/ContatoNaf.jsx`. Os dois envios de
 e-mail usam as rotas `/emails/naf` e `/emails/comparativo` e exigem login. O
 backend precisa das variáveis SMTP e do destinatário NAF; consulte seu README.
 Falhas são exibidas ao usuário sem apagar a mensagem de contato.
+
+O menu responsivo abre abaixo do breakpoint `md`, fecha com `Escape` e devolve
+o foco ao botão do menu. O link de salto leva ao contêiner `#conteudo-principal`.
+O tema pode ser alternado no menu e é salvo no navegador; o relatório PDF é
+mantido em cores de papel para continuar legível nos dois temas.
+
+Resultados da auditoria Lighthouse e limitações dos fluxos não executados:
+[`docs/acessibilidade/auditoria-m4.md`](../docs/acessibilidade/auditoria-m4.md).
 
 Validação local:
 

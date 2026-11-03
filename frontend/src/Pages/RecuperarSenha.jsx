@@ -25,21 +25,35 @@ export default function RecuperarSenha() {
 
   return (
     <main className="min-h-screen bg-naf-light px-4 py-12 text-naf-blue">
-      <div className="max-w-md mx-auto bg-white p-6 rounded-2xl shadow-lg">
-        <h1 className="text-2xl font-bold mb-4">Recuperar senha</h1>
+      <div className="mx-auto w-full max-w-md rounded-2xl border border-naf-gray/30 bg-white p-6 shadow-lg sm:p-8">
+        <h1 className="mb-4 text-2xl font-bold">Recuperar senha</h1>
         <p className="mb-6">Informe seu e-mail cadastrado para receber um link de redefinição válido por 30 minutos.</p>
         <form onSubmit={solicitar} className="space-y-4">
           <div>
             <label htmlFor="recuperar-email" className="block mb-2 font-medium">E-mail cadastrado</label>
-            <input id="recuperar-email" type="email" autoComplete="email" maxLength={254} required value={email} onChange={(event) => setEmail(event.target.value)} className="w-full border border-gray-400 rounded-lg p-3 focus:ring-2 focus:ring-naf-blue" />
+            <input
+              id="recuperar-email"
+              type="email"
+              autoComplete="email"
+              maxLength={254}
+              required
+              value={email}
+              onChange={(event) => {
+                setEmail(event.target.value);
+                setErro("");
+              }}
+              aria-invalid={Boolean(erro)}
+              aria-describedby={erro ? "recuperar-email-erro" : undefined}
+              className="w-full rounded-xl border border-naf-gray px-4 py-3 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red"
+            />
+            {erro && <p id="recuperar-email-erro" role="alert" className="mt-2 text-sm text-red-700">{erro}</p>}
           </div>
-          <button disabled={enviando} className="w-full bg-naf-blue text-white p-3 rounded-lg font-bold disabled:opacity-60">
+          <button type="submit" disabled={enviando} className="w-full rounded-xl bg-naf-blue p-3 font-bold text-white disabled:opacity-60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red">
             {enviando ? "Solicitando..." : "Enviar instruções"}
           </button>
         </form>
-        {erro && <p role="alert" className="mt-4 text-red-700">{erro}</p>}
-        {mensagem && <div role="status" className="mt-4"><p>{mensagem}</p><p className="mt-2 text-sm">Caso precise tentar novamente, aguarde pelo menos um minuto.</p></div>}
-        <Link to="/login" className="inline-block mt-6 underline font-medium">Voltar ao login</Link>
+        {mensagem && <div role="status" aria-live="polite" className="mt-4 text-sm text-green-800"><p>{mensagem}</p><p className="mt-2">Caso precise tentar novamente, aguarde pelo menos um minuto.</p></div>}
+        <Link to="/login" className="mt-6 inline-block font-medium underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red">Voltar ao login</Link>
       </div>
     </main>
   );

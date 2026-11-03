@@ -62,6 +62,7 @@ export default function Comparativo({ simulacao }) {
   const [gerandoPdf, setGerandoPdf] = useState(false);
   const [enviandoEmail, setEnviandoEmail] = useState(false);
   const [dataGeracaoPdf, setDataGeracaoPdf] = useState("");
+  const [erroPdf, setErroPdf] = useState("");
   const calculo = simulacao?.calculo;
   const resultado = simulacao?.resultado;
   const profissao = calculo?.tipoProfissao;
@@ -84,12 +85,13 @@ export default function Comparativo({ simulacao }) {
   };
 
   const gerarPDF = async () => {
+    setErroPdf("");
     setGerandoPdf(true);
     setDataGeracaoPdf(new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(new Date()));
     const elemento = document.getElementById("resultado-comparativo");
     
     if (!elemento) {
-      console.error("Erro interno: A div do PDF não foi encontrada.");
+      setErroPdf("Não foi possível localizar o relatório para gerar o PDF.");
       setGerandoPdf(false);
       return;
     }
@@ -133,6 +135,7 @@ export default function Comparativo({ simulacao }) {
       await workerComQuebraValidada.toCanvas().toPdf().save();
     } catch (error) {
       console.error("Falha ao processar o arquivo PDF:", error);
+      setErroPdf("Não foi possível gerar o PDF. Tente novamente.");
     } finally {
       setGerandoPdf(false);
     }
@@ -141,15 +144,15 @@ export default function Comparativo({ simulacao }) {
   if (!simulacao) return <Navigate to="/" replace />;
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EFEFEF]">
-      <main className="flex-grow w-full max-w-4xl mx-auto px-4 py-10">
-        <h1 className="text-3xl font-bold text-[#132436] mb-4">Comparativo PF × PJ</h1>
+    <div className="flex min-h-screen flex-col bg-naf-light">
+      <main className="mx-auto w-full max-w-4xl flex-grow px-4 py-10 text-naf-blue">
+        <h1 className="mb-4 text-3xl font-bold">Comparativo PF × PJ</h1>
         <div className="flex flex-wrap gap-4 mb-6">
-          <Link to="/" className="underline text-[#132436]">Voltar ao formulário</Link>
-          <Link to="/historico" className="underline text-[#132436]">Ver histórico</Link>
+          <Link to="/" className="underline">Voltar ao formulário</Link>
+          <Link to="/historico" className="underline">Ver histórico</Link>
         </div>
-        <div className="border-t border-gray-200 bg-gray-50 rounded-3xl shadow-xl">
-              <div id="resultado-comparativo" className="p-6 md:p-8 bg-[#ffffff]">
+        <div className="rounded-3xl border-t border-gray-200 bg-gray-50 shadow-xl">
+              <div id="resultado-comparativo" className="tema-papel rounded-t-3xl bg-white p-4 sm:p-6 md:p-8">
                 <header className="mb-6 border-b-2 border-[#132436] pb-5 text-center" style={{ breakInside: "avoid" }}>
                   <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#CD371F]">NAF — Núcleo de Apoio Contábil e Fiscal</p>
                   <p className="mt-1 text-sm font-bold text-[#132436]">Universidade Christus</p>
@@ -208,7 +211,7 @@ export default function Comparativo({ simulacao }) {
                     </div>
                     <p className="text-right text-xs text-gray-500">Continuação do relatório<br />Emitido em {dataGeracaoPdf}</p>
                   </div>
-                  <div className="mb-5 grid grid-cols-3 gap-2 rounded-xl bg-gray-50 p-3 text-center" style={{ breakInside: "avoid" }}>
+                  <div className="mb-5 grid grid-cols-1 gap-2 rounded-xl bg-gray-50 p-3 text-center sm:grid-cols-3" style={{ breakInside: "avoid" }}>
                     <div><p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Total PF</p><p className="mt-1 text-sm font-bold tabular-nums text-[#132436]">{formatarMoeda(resultado.pf.imposto)}</p></div>
                     <div><p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Total PJ</p><p className="mt-1 text-sm font-bold tabular-nums text-[#132436]">{formatarMoeda(resultado.pj.total)}</p></div>
                     <div><p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">Diferença mensal</p><p className="mt-1 text-sm font-bold tabular-nums text-[#132436]">{formatarMoeda(resultado.diferenca)}</p></div>
@@ -254,37 +257,38 @@ export default function Comparativo({ simulacao }) {
               </div>
 
               <div className="px-6 md:px-8 pb-8 pt-4 flex flex-col gap-4 border-t border-gray-200">
-                <button onClick={gerarPDF} disabled={gerandoPdf} className={`w-full bg-[#132436] text-white font-bold py-3 rounded-xl transition-all duration-[400ms] shadow-md flex items-center justify-center gap-2 cursor-pointer ${gerandoPdf ? 'opacity-70 cursor-wait' : 'hover:bg-[#0c1825] hover:-translate-y-1'}`}>
+                <button type="button" onClick={gerarPDF} disabled={gerandoPdf} className={`w-full rounded-xl bg-naf-blue py-3 font-bold text-white shadow-md transition-all duration-[400ms] ${gerandoPdf ? 'cursor-wait opacity-70' : 'cursor-pointer hover:-translate-y-1 hover:bg-[#0c1825]'}`}>
                   <svg className={`w-5 h-5 ${gerandoPdf ? 'animate-bounce' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                   {gerandoPdf ? "Processando e Baixando PDF..." : "Baixar Relatório Oficial em PDF"}
                 </button>
 
                 <div className="text-center mt-2">
-                  <button onClick={() => setMostrarEmail(!mostrarEmail)} className="text-sm font-bold text-gray-500 hover:text-[#132436] transition-colors underline cursor-pointer bg-transparent border-none">Deseja enviar os resultados para o seu e-mail?</button>
+                  <button type="button" onClick={() => setMostrarEmail(!mostrarEmail)} aria-expanded={mostrarEmail} aria-controls="formulario-email-comparativo" className="border-none bg-transparent text-sm font-bold text-gray-700 underline transition-colors hover:text-naf-blue">Deseja enviar os resultados para o seu e-mail?</button>
                 </div>
 
                 {mostrarEmail && (
-                  <div className="mt-2 space-y-3 p-4 bg-white border border-gray-300 rounded-xl shadow-sm">
-                    <label className="block text-sm font-medium text-[#132436]">Qual e-mail deve receber a simulação?</label>
+                  <div id="formulario-email-comparativo" className="mt-2 space-y-3 rounded-xl border border-gray-300 bg-white p-4 shadow-sm">
+                    <label htmlFor="comparativo-email" className="block text-sm font-medium text-naf-blue">Qual e-mail deve receber a simulação?</label>
                     <div className="flex flex-col sm:flex-row gap-2">
-                      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="contato@exemplo.com" className="flex-grow border border-gray-300 px-4 py-2 rounded-xl focus:ring-2 focus:ring-[#132436] outline-none text-sm" />
-                  <button disabled={enviandoEmail} onClick={enviarEmail} className="bg-[#CD371F] text-white px-6 py-2 rounded-xl hover:bg-[#a62b18] transition text-sm font-bold cursor-pointer shadow-sm disabled:opacity-60">{enviandoEmail ? "Enviando..." : "Enviar Agora"}</button>
+                      <input id="comparativo-email" type="email" autoComplete="email" value={email} onChange={(e) => { setEmail(e.target.value); setMensagemEnvio(""); }} placeholder="contato@exemplo.com" aria-invalid={mensagemEnvio.startsWith("Por favor")} aria-describedby="comparativo-email-message" className="min-w-0 flex-grow rounded-xl border border-gray-300 px-4 py-2 text-sm focus:ring-2 focus:ring-naf-blue" />
+                      <button type="button" onClick={enviarEmail} disabled={enviandoEmail} className="rounded-xl bg-naf-red px-6 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#a62b18] disabled:cursor-wait disabled:opacity-60">{enviandoEmail ? "Enviando..." : "Enviar Agora"}</button>
                     </div>
-                    {mensagemEnvio && <p role="status" className="text-sm font-medium text-[#132436]">{mensagemEnvio}</p>}
+                    <p id="comparativo-email-message" role={mensagemEnvio && !mensagemEnvio.startsWith("Por favor") && mensagemEnvio.startsWith("Não") ? "alert" : "status"} aria-live={mensagemEnvio.startsWith("Não") ? "assertive" : "polite"} className={`text-sm font-bold ${mensagemEnvio.startsWith("Por favor") || mensagemEnvio.startsWith("Não") ? "text-naf-red" : "text-green-700"}`}>{mensagemEnvio}</p>
                   </div>
                 )}
+                {erroPdf && <p role="alert" aria-live="assertive" className="text-sm font-medium text-naf-red">{erroPdf}</p>}
               </div>
 
-              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-gray-200 bg-white rounded-b-3xl">
+              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-naf-line bg-naf-surface rounded-b-3xl">
                 <div className="text-center mb-4">
-                  <h4 className="font-bold text-[#132436] uppercase tracking-wider text-sm flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 text-[#CD371F]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+                  <h3 className="font-bold text-naf-ink uppercase tracking-wider text-sm flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5 text-naf-alert" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
                     Conteúdo Recomendado Para Você
-                  </h4>
-                  <p className="text-sm text-gray-500">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
+                  </h3>
+                  <p className="text-sm text-naf-gray">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
                 </div>
                 
-                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-naf-line">
                   {resultado.siglaVencedora === 'PJ' ? (
                     <iframe className="w-full h-full" src="https://www.youtube.com/embed/yMlNDLDlk2c" title="Como funciona o Simples Nacional" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                   ) : (

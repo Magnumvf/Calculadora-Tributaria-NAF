@@ -1,0 +1,113 @@
+[
+  {
+    "rota": "/",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/inicio",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/login",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/cadastro",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/RecuperarSenha",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/faq",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/sobre",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/pagina-inexistente",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/Home",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/calculo-pf",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/calculo-pj",
+    "auditada": true,
+    "acessibilidade": 100,
+    "largura320": 305,
+    "semRolagemHorizontal": true,
+    "falhas": [],
+    "largos": []
+  },
+  {
+    "rota": "/comparativo",
+    "auditada": false,
+    "motivo": "Redirecionada para /",
+    "urlFinal": "/"
+  },
+  {
+    "rota": "/historico",
+    "auditada": false,
+    "motivo": "Histórico sem dados carregados",
+    "urlFinal": "/historico"
+  }
+]

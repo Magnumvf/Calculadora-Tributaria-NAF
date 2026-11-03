@@ -40,7 +40,7 @@ export default function ContatoNaf() {
           </div>
 
           {!token && <p className="mb-4"><Link to="/login" className="underline">Entre na sua conta</Link> para enviar uma mensagem.</p>}
-          {status && <p role="status" className="mb-4 text-naf-blue">{status}</p>}
+          {status && <p role={status.startsWith("Não foi") ? "alert" : "status"} aria-live={status.startsWith("Não foi") ? "assertive" : "polite"} className="mb-4 text-naf-blue">{status}</p>}
           <form onSubmit={handleSubmit} className="space-y-4 text-left">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>

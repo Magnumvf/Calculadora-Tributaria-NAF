@@ -6,6 +6,8 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [erroServidor, setErroServidor] = useState("");
+  const [enviando, setEnviando] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const destino = ["/Home", "/calculo-pf", "/calculo-pj", "/historico"].includes(location.state?.from)
@@ -41,6 +43,8 @@ export default function Login() {
     }
 
     setErrors({});
+    setErroServidor("");
+    setEnviando(true);
 
     try {
       const response = await api.post('/auth/login', { email, password });
@@ -48,32 +52,32 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
-      alert("Login realizado com sucesso!");
       navigate(destino, { replace: true });
 
     } catch (error) {
-      const mensagemErro = error.response?.data?.error || "Erro ao conectar ao servidor.";
-      alert(mensagemErro);
+      setErroServidor(error.response?.data?.error || "Erro ao conectar ao servidor.");
+    } finally {
+      setEnviando(false);
     }
   };
 
   return (
-    <div
-      className="flex flex-col items-center justify-center min-h-screen bg-naf-light p-4"
+    <main
+      className="flex min-h-screen flex-col items-center justify-center bg-naf-light p-4"
     >
       <h1
-        className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms]
+        className={`text-3xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[200ms]
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
       >
         CALCULADORA DE IMPOSTO DE RENDA
       </h1>
 
       <div
-        className={`w-full max-w-sm p-8 bg-white rounded-2xl shadow-xl transition-all duration-[700ms] ease-out delay-[300ms] border border-naf-gray/30
+        className={`w-full max-w-sm rounded-2xl border border-naf-gray/30 bg-white p-6 shadow-xl transition-all duration-[700ms] ease-out delay-[300ms] sm:p-8
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
-          className={`text-2xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[500ms] ${
+          className={`text-2xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[500ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -85,6 +89,8 @@ export default function Login() {
             Entre na sua conta para acessar a página solicitada.
           </p>
         )}
+        {location.state?.notice && <p role="status" aria-live="polite" className="mb-4 text-sm text-green-700">{location.state.notice}</p>}
+        {erroServidor && <p role="alert" aria-live="assertive" className="mb-4 text-sm text-red-700">{erroServidor}</p>}
 
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           <div
@@ -92,12 +98,16 @@ export default function Login() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="login-email" className="block mb-2 text-sm font-medium text-naf-ink">
               Email
             </label>
             <input
+              id="login-email"
               type="email"
+              autoComplete="email"
               placeholder="Digite seu email"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby="login-email-error"
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -111,8 +121,8 @@ export default function Login() {
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:-translate-y-1 hover:shadow-md"
             />
             <div>
-              <p className="mt-1 text-sm text-naf-red font-medium">
-                {errors.email || " "}
+              <p id="login-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-alert font-medium">
+                {errors.email}
               </p>
             </div>
           </div>
@@ -122,21 +132,23 @@ export default function Login() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="login-password" className="block mb-2 text-sm font-medium text-naf-ink">
               Senha
             </label>
             <input
+              id="login-password"
               type="password"
+              autoComplete="current-password"
               placeholder="Digite sua senha"
+              aria-invalid={Boolean(errors.password)}
+              aria-describedby="login-password-error"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:-translate-y-1 hover:shadow-md"
             />
-            {errors.password && (
-              <p className="mt-1 text-sm text-naf-red font-medium">
-                {errors.password}
-              </p>
-            )}
+            <p id="login-password-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-alert font-medium">
+              {errors.password}
+            </p>
           </div>
 
           <div
@@ -146,9 +158,10 @@ export default function Login() {
           >
             <button
               type="submit"
-              className="w-full bg-naf-red text-white font-bold py-3 rounded-xl hover:bg-[#a62b18] transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 shadow-md"
+              disabled={enviando}
+              className="w-full rounded-xl bg-naf-red py-3 font-bold text-white shadow-md transition delay-[80ms] duration-[400ms] ease-in-out hover:scale-105 hover:bg-[#a62b18] disabled:cursor-wait disabled:opacity-60"
             >
-              Entrar
+              {enviando ? "Entrando..." : "Entrar"}
             </button>
           </div>
         </form>
@@ -176,12 +189,6 @@ export default function Login() {
         </p>
       </div>
 
-      <h2
-        className={`block mb-2 mt-6 text-sm font-medium text-naf-gray p-1 transition-all duration-[700ms] ease-out delay-[1350ms] ${
-          isVisible ? "opacity-100" : "opacity-0"
-        }`}
-      >
-      </h2>
-    </div>
+    </main>
   );
 }

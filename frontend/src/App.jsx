@@ -35,27 +35,26 @@ function App() {
 
   return (
     <BrowserRouter>
+      <a className="skip-link" href="#conteudo-principal">Pular para o conteúdo</a>
       <Navbar onLogout={limparSessao} />
-      <Routes>
-        {/* Rotas Públicas */}
-        <Route path="/" element={<Calculadora formulario={formulario} setFormulario={setFormulario} abrirSimulacao={abrirSimulacao} />} />
-        <Route path="/inicio" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
-        <Route path="/redefinir-senha" element={<RedefinirSenha onRedefinir={limparSessao} />} />
-
-        <Route path="/faq" element={<Faq />} />
-        <Route path="/sobre" element={<Sobre />} />
-
-        {/* Páginas que verificam a sessão */}
-        <Route path="/Home" element={<Home />} />
-        <Route path="/calculo-pf" element={<CalculoPF />} />
-        <Route path="/calculo-pj" element={<CalculoPJ />} />
-        <Route path="/comparativo" element={<Comparativo key={simulacao?.calculo.id || "vazio"} simulacao={simulacao} />} />
-        <Route path="/historico" element={<Historico abrirSimulacao={abrirSimulacao} />} />
-        <Route path="*" element={<NaoEncontrada />} />
-      </Routes>
+      <div id="conteudo-principal" tabIndex={-1}>
+        <Routes>
+          <Route path="/" element={<Calculadora formulario={formulario} setFormulario={setFormulario} abrirSimulacao={abrirSimulacao} />} />
+          <Route path="/inicio" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/cadastro" element={<Cadastro />} />
+          <Route path="/RecuperarSenha" element={<RecuperarSenha />} />
+          <Route path="/redefinir-senha" element={<RedefinirSenha onRedefinir={limparSessao} />} />
+          <Route path="/faq" element={<Faq />} />
+          <Route path="/sobre" element={<Sobre />} />
+          <Route path="/Home" element={<Home />} />
+          <Route path="/calculo-pf" element={<CalculoPF />} />
+          <Route path="/calculo-pj" element={<CalculoPJ />} />
+          <Route path="/comparativo" element={<Comparativo key={simulacao?.calculo.id || "vazio"} simulacao={simulacao} />} />
+          <Route path="/historico" element={<Historico abrirSimulacao={abrirSimulacao} />} />
+          <Route path="*" element={<NaoEncontrada />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

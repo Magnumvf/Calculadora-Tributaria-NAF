@@ -66,26 +66,26 @@ export default function Historico({ abrirSimulacao }) {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#EFEFEF]">
+    <div className="flex min-h-screen flex-col bg-naf-light">
 
-      <main className="flex-grow flex flex-col items-center py-10 px-4">
+      <main className="flex flex-grow flex-col items-center px-4 py-10">
         {/* Cabeçalho */}
         <div className={`text-center mb-8 transition-all duration-[700ms] ease-out delay-[200ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-          <h1 className="text-3xl font-bold text-[#132436] mb-2">Suas Simulações Salvas</h1>
-          <p className="text-[#B2B2B2] font-medium max-w-xl mx-auto">
+          <h1 className="mb-2 text-3xl font-bold text-naf-blue">Suas Simulações Salvas</h1>
+          <p className="text-naf-gray font-medium max-w-xl mx-auto">
             Confira abaixo o histórico de todos os cálculos e comparativos tributários guardados em sua conta.
           </p>
         </div>
 
         {/* Listagem / Tabela */}
-        <div className={`w-full max-w-5xl bg-white rounded-3xl shadow-xl border border-gray-200 p-6 md:p-8 transition-all duration-[700ms] ease-out delay-[400ms] ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+        <div className={`w-full max-w-5xl rounded-3xl border border-gray-200 bg-white p-4 shadow-xl transition-all duration-[700ms] ease-out delay-[400ms] sm:p-6 md:p-8 ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
           
           {carregando ? (
-            <div className="text-center py-10 text-naf-gray font-medium animate-pulse">
+            <div role="status" aria-live="polite" className="text-center py-10 text-naf-gray font-medium animate-pulse">
               Carregando histórico do banco de dados...
             </div>
           ) : erro ? (
-            <div className="text-center py-10 text-naf-red font-semibold">
+            <div role="alert" aria-live="assertive" className="text-center py-10 text-naf-alert font-semibold">
               {erro}
             </div>
           ) : calculos.length === 0 ? (
@@ -111,43 +111,44 @@ export default function Historico({ abrirSimulacao }) {
                 </button>
               </div>
               <p className={`mb-3 min-h-5 text-sm ${mensagemExportacao.startsWith("Não foi") ? "text-naf-red" : "text-green-700"}`} role="status" aria-live="polite">{mensagemExportacao}</p>
-              <div className="overflow-x-auto rounded-2xl border border-gray-100 shadow-inner">
-                <table className="min-w-full text-sm text-gray-700">
+              <div className="hidden overflow-x-auto rounded-2xl border border-gray-100 shadow-inner lg:block">
+                <table aria-label="Histórico de simulações" className="min-w-full text-sm text-gray-700">
+                <caption className="sr-only">Simulações salvas, com valores e opção para abrir cada comparativo.</caption>
                 <thead className="bg-[#132436] text-white text-xs uppercase tracking-wider">
                   <tr>
-                    <th className="py-4 px-4 text-left">Data</th>
-                    <th className="py-4 px-4 text-left">Profissão</th>
-                    <th className="py-4 px-4 text-left">Faturamento (Bruto)</th>
-                    <th className="py-4 px-4 text-left">Livro Caixa (PF)</th>
-                    <th className="py-4 px-4 text-left">Imposto PF</th>
-                    <th className="py-4 px-4 text-left">Imposto PJ</th>
-                    <th className="py-4 px-4 text-left">Folha</th>
-                    <th className="py-4 px-4 text-left">Fator R</th>
-                    <th className="py-4 px-4 text-left">Anexo PJ</th>
-                    <th className="py-4 px-4 text-center">Melhor Opção</th>
-                    <th className="py-4 px-4 text-right">Economia</th>
-                    <th className="py-4 px-4 text-left">Comparativo</th>
+                    <th scope="col" className="py-4 px-4 text-left">Data</th>
+                    <th scope="col" className="py-4 px-4 text-left">Profissão</th>
+                    <th scope="col" className="py-4 px-4 text-left">Faturamento (Bruto)</th>
+                    <th scope="col" className="py-4 px-4 text-left">Livro Caixa (PF)</th>
+                    <th scope="col" className="py-4 px-4 text-left">Imposto PF</th>
+                    <th scope="col" className="py-4 px-4 text-left">Imposto PJ</th>
+                    <th scope="col" className="py-4 px-4 text-left">Folha</th>
+                    <th scope="col" className="py-4 px-4 text-left">Fator R</th>
+                    <th scope="col" className="py-4 px-4 text-left">Anexo PJ</th>
+                    <th scope="col" className="py-4 px-4 text-center">Melhor Opção</th>
+                    <th scope="col" className="py-4 px-4 text-right">Economia</th>
+                    <th scope="col" className="py-4 px-4 text-left">Comparativo</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {calculos.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="py-4 px-4 font-medium text-gray-500">
+                    <tr key={item.id} className="hover:bg-naf-surface-2/80 transition-colors">
+                      <td className="break-words py-3 px-2 font-medium text-naf-gray">
                         {new Date(item.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="py-4 px-4 capitalize font-semibold text-naf-blue">
+                      <td className="break-words py-3 px-2 capitalize font-semibold text-naf-ink">
                         {item.tipoProfissao}
                       </td>
-                      <td className="py-4 px-4 font-medium">
+                      <td className="break-words py-3 px-2 font-medium">
                         R$ {item.faturamento.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="py-4 px-4 text-gray-500">
+                      <td className="break-words py-3 px-2 text-naf-gray">
                         {item.custos ? `R$ ${item.custos.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : "—"}
                       </td>
-                      <td className="py-4 px-4 text-[#CD371F] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPF.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="py-4 px-4 text-[#CD371F] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-4 px-4 text-gray-500">
@@ -166,7 +167,7 @@ export default function Historico({ abrirSimulacao }) {
                           {item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}
                         </span>
                       </td>
-                      <td className="py-4 px-4 text-right font-bold text-green-600">
+                      <td className="break-words py-3 px-2 text-right font-bold text-naf-ok">
                         R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-4 px-4">
@@ -178,8 +179,30 @@ export default function Historico({ abrirSimulacao }) {
                     </tr>
                   ))}
                 </tbody>
-                </table>
-              </div>
+              </table>
+            </div>
+            <div className="space-y-4 lg:hidden">
+              {calculos.map((item) => (
+                <article key={item.id} className="rounded-xl border border-gray-200 bg-white p-4 text-sm text-gray-700">
+                  <h2 className="mb-3 font-bold capitalize text-naf-blue">{item.tipoProfissao} — {new Date(item.createdAt).toLocaleDateString("pt-BR")}</h2>
+                  <dl className="space-y-2">
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Faturamento</dt><dd className="text-right font-medium">R$ {item.faturamento.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Livro Caixa (PF)</dt><dd className="text-right">{item.custos ? `R$ ${item.custos.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : "—"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Imposto PF</dt><dd className="text-right">R$ {item.impostoPF.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Imposto PJ</dt><dd className="text-right">R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Folha</dt><dd className="text-right">{item.folha == null ? "—" : `R$ ${item.folha.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Fator R</dt><dd className="text-right">{item.fatorR == null ? "—" : new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(item.fatorR)}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Anexo PJ</dt><dd className="text-right">{item.anexo || "—"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Melhor opção</dt><dd className="font-bold">{item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Economia</dt><dd className="text-right font-bold text-naf-ok">R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                  </dl>
+                  <button type="button" className="mt-4 rounded-lg font-medium text-naf-blue underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red" onClick={() => {
+                    abrirSimulacao(item);
+                    navigate("/comparativo");
+                  }}>Abrir comparativo</button>
+                </article>
+              ))}
+            </div>
             </>
           )}
         </div>
