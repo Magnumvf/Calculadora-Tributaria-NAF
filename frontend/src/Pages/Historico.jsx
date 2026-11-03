@@ -85,7 +85,7 @@ export default function Historico({ abrirSimulacao }) {
               Carregando histórico do banco de dados...
             </div>
           ) : erro ? (
-            <div role="alert" aria-live="assertive" className="text-center py-10 text-naf-red font-semibold">
+            <div role="alert" aria-live="assertive" className="text-center py-10 text-naf-alert font-semibold">
               {erro}
             </div>
           ) : calculos.length === 0 ? (
@@ -132,23 +132,23 @@ export default function Historico({ abrirSimulacao }) {
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {calculos.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-50/80 transition-colors">
-                      <td className="break-words py-3 px-2 font-medium text-gray-500">
+                    <tr key={item.id} className="hover:bg-naf-surface-2/80 transition-colors">
+                      <td className="break-words py-3 px-2 font-medium text-naf-gray">
                         {new Date(item.createdAt).toLocaleDateString("pt-BR")}
                       </td>
-                      <td className="break-words py-3 px-2 capitalize font-semibold text-naf-blue">
+                      <td className="break-words py-3 px-2 capitalize font-semibold text-naf-ink">
                         {item.tipoProfissao}
                       </td>
                       <td className="break-words py-3 px-2 font-medium">
                         R$ {item.faturamento.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="break-words py-3 px-2 text-gray-500">
+                      <td className="break-words py-3 px-2 text-naf-gray">
                         {item.custos ? `R$ ${item.custos.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}` : "—"}
                       </td>
-                      <td className="break-words py-3 px-2 text-[#C3321D] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPF.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
-                      <td className="break-words py-3 px-2 text-[#C3321D] font-medium">
+                      <td className="break-words py-3 px-2 text-naf-alert font-medium">
                         R$ {item.impostoPJ.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-4 px-4 text-gray-500">
@@ -167,7 +167,7 @@ export default function Historico({ abrirSimulacao }) {
                           {item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}
                         </span>
                       </td>
-                      <td className="break-words py-3 px-2 text-right font-bold text-green-700">
+                      <td className="break-words py-3 px-2 text-right font-bold text-naf-ok">
                         R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}
                       </td>
                       <td className="py-4 px-4">
@@ -194,7 +194,7 @@ export default function Historico({ abrirSimulacao }) {
                     <div className="flex flex-wrap justify-between gap-x-3"><dt>Fator R</dt><dd className="text-right">{item.fatorR == null ? "—" : new Intl.NumberFormat("pt-BR", { style: "percent", minimumFractionDigits: 1, maximumFractionDigits: 2 }).format(item.fatorR)}</dd></div>
                     <div className="flex flex-wrap justify-between gap-x-3"><dt>Anexo PJ</dt><dd className="text-right">{item.anexo || "—"}</dd></div>
                     <div className="flex flex-wrap justify-between gap-x-3"><dt>Melhor opção</dt><dd className="font-bold">{item.melhorOpcao.includes("PJ") ? "PJ" : "PF"}</dd></div>
-                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Economia</dt><dd className="text-right font-bold text-green-700">R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
+                    <div className="flex flex-wrap justify-between gap-x-3"><dt>Economia</dt><dd className="text-right font-bold text-naf-ok">R$ {item.economiaMensal.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}</dd></div>
                   </dl>
                   <button type="button" className="mt-4 rounded-lg font-medium text-naf-blue underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-naf-red" onClick={() => {
                     abrirSimulacao(item);

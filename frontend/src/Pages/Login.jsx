@@ -66,7 +66,7 @@ export default function Login() {
       className="flex min-h-screen flex-col items-center justify-center bg-naf-light p-4"
     >
       <h1
-        className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms]
+        className={`text-3xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[200ms]
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
       >
         CALCULADORA DE IMPOSTO DE RENDA
@@ -77,7 +77,7 @@ export default function Login() {
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
-          className={`text-2xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[500ms] ${
+          className={`text-2xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[500ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -98,7 +98,7 @@ export default function Login() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="login-email" className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="login-email" className="block mb-2 text-sm font-medium text-naf-ink">
               Email
             </label>
             <input
@@ -121,7 +121,7 @@ export default function Login() {
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:-translate-y-1 hover:shadow-md"
             />
             <div>
-              <p id="login-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-red font-medium">
+              <p id="login-email-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-alert font-medium">
                 {errors.email}
               </p>
             </div>
@@ -132,7 +132,7 @@ export default function Login() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="login-password" className="block mb-2 text-sm font-medium text-naf-blue">
+            <label htmlFor="login-password" className="block mb-2 text-sm font-medium text-naf-ink">
               Senha
             </label>
             <input
@@ -146,7 +146,7 @@ export default function Login() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:-translate-y-1 hover:shadow-md"
             />
-            <p id="login-password-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-red font-medium">
+            <p id="login-password-error" aria-live="polite" className="mt-1 min-h-5 text-sm text-naf-alert font-medium">
               {errors.password}
             </p>
           </div>

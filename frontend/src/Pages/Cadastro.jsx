@@ -66,7 +66,7 @@ export default function Cadastro() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-naf-light p-4">
       <h1
-        className={`text-3xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[100ms]
+        className={`text-3xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[100ms]
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-10"}`}
       >
         CALCULADORA DE IMPOSTO DE RENDA
@@ -77,7 +77,7 @@ export default function Cadastro() {
           ${isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
       >
         <h2
-          className={`text-2xl font-bold text-center mb-6 text-naf-blue transition-all duration-[700ms] ease-out delay-[200ms] ${
+          className={`text-2xl font-bold text-center mb-6 text-naf-ink transition-all duration-[700ms] ease-out delay-[200ms] ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
           }`}
         >
@@ -85,13 +85,15 @@ export default function Cadastro() {
         </h2>
         {erroServidor && <p role="alert" aria-live="assertive" className="mb-4 text-sm text-red-700">{erroServidor}</p>}
 
+        <p role="alert" className="min-h-5 mb-2 text-sm text-center font-semibold text-naf-alert">{erroServidor}</p>
+
         <form onSubmit={handleSubmit} className="space-y-4" noValidate>
           <div
             className={`transition-all duration-[700ms] ease-out delay-[300ms] ${
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="cadastro-name" className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-name" className="block mb-1 text-sm font-medium text-naf-ink">
               Nome Completo
             </label>
             <input
@@ -105,7 +107,7 @@ export default function Cadastro() {
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            <p id="cadastro-name-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.name}</p>
+            <p id="cadastro-name-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-alert font-medium">{errors.name}</p>
           </div>
 
           <div
@@ -113,7 +115,7 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="cadastro-email" className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-email" className="block mb-1 text-sm font-medium text-naf-ink">
               Email
             </label>
             <input
@@ -127,7 +129,7 @@ export default function Cadastro() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            <p id="cadastro-email-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.email}</p>
+            <p id="cadastro-email-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-alert font-medium">{errors.email}</p>
           </div>
 
           <div
@@ -135,7 +137,7 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="cadastro-password" className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-password" className="block mb-1 text-sm font-medium text-naf-ink">
               Senha
             </label>
             <input
@@ -149,7 +151,7 @@ export default function Cadastro() {
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            <p id="cadastro-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">{errors.password}</p>
+            <p id="cadastro-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-alert font-medium">{errors.password}</p>
           </div>
 
           <div
@@ -157,7 +159,7 @@ export default function Cadastro() {
               isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
             }`}
           >
-            <label htmlFor="cadastro-confirm-password" className="block mb-1 text-sm font-medium text-naf-blue">
+            <label htmlFor="cadastro-confirm-password" className="block mb-1 text-sm font-medium text-naf-ink">
               Confirmar Senha
             </label>
             <input
@@ -171,7 +173,7 @@ export default function Cadastro() {
               onChange={(e) => setConfirmPassword(e.target.value)}
               className="w-full px-4 py-2 border border-naf-gray rounded-xl focus:ring-2 focus:ring-naf-red focus:border-transparent outline-none transition delay-[80ms] duration-[400ms] ease-in-out hover:shadow-sm"
             />
-            <p id="cadastro-confirm-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-red font-medium">
+            <p id="cadastro-confirm-password-error" aria-live="polite" className="mt-1 min-h-4 text-xs text-naf-alert font-medium">
               {errors.confirmPassword}
             </p>
           </div>
@@ -199,7 +201,7 @@ export default function Cadastro() {
           Já tem conta?{" "}
           <button
             onClick={() => navigate("/login")}
-            className="text-naf-red hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
+            className="text-naf-alert hover:underline font-bold bg-transparent border-none p-0 cursor-pointer"
           >
             Faça login
           </button>

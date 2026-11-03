@@ -2,51 +2,47 @@
 
 Data: 3 de novembro de 2026
 
-## Resultados
+## Resultados após integração
 
-Auditoria feita localmente com Lighthouse 13.6.0, categoria Acessibilidade,
-Chrome headless e emulação móvel de 320 × 800 px. Cada rota abaixo foi
-confirmada na URL final indicada e exibiu seu conteúdo esperado.
+Lighthouse 13.6.0, categoria Acessibilidade, Chrome headless; viewport de
+320 × 640 px para a checagem de largura. As 11 rotas listadas em
+[`README.md`](./README.md) pontuaram 100 nos temas claro e escuro. Nas rotas
+`/Home`, `/calculo-pf` e `/calculo-pj`, foi usado token fictício apenas para
+renderizar a tela e conferir seu conteúdo; isso não é evidência de
+autenticação ou dos fluxos do backend.
 
-| Rota | URL final | Acessibilidade |
-| --- | --- | ---: |
-| `/` | `/` | 100 |
-| `/inicio` | `/inicio` | 100 |
-| `/faq` | `/faq` | 100 |
-| `/sobre` | `/sobre` | 100 |
-| `/login` | `/login` | 100 |
-| `/cadastro` | `/cadastro` | 100 |
-| `/RecuperarSenha` | `/RecuperarSenha` | 100 |
+`/comparativo` foi excluída porque redirecionou para `/` sem uma simulação.
+`/historico` foi excluída porque não carregou registros. Os resumos JSON
+distinguem essas rotas não auditadas das pontuações obtidas.
 
-Também foram verificadas, com Playwright, a ausência de rolagem horizontal nas
-rotas públicas a 320 px e 1440 px, nos temas claro e escuro, o fechamento do
-menu móvel com `Escape` e retorno do foco ao botão, e o foco do link “Pular
-para o conteúdo” em `#conteudo-principal`.
+A correção final também registrou os tokens semânticos no tema Tailwind para
+que as utilidades de texto e superfície usadas pelas páginas sejam incluídas
+no CSS de produção.
 
-## Rotas e fluxos não auditados
+No navegador, as rotas públicas foram conferidas em 320 e 1440 px nos dois
+temas. Não houve rolagem horizontal. Também foram verificados o fechamento do
+menu móvel com `Escape`, o retorno do foco ao botão do menu e o foco do link
+“Pular para o conteúdo” em `#conteudo-principal`.
 
-`/comparativo` sem simulação redireciona para `/`; o conteúdo exibido foi
-confirmado como a calculadora, portanto essa rota não foi considerada
-auditada. `/historico` sem sessão redireciona para `/login`, que também foi
-confirmado; o histórico não foi considerado auditado. O comparativo e o
-histórico com dados reais, bem como a página de redefinição com token válido,
-dependem de sessão e dados do backend.
+## Fluxos com respostas simuladas
 
-Os fluxos reais de cálculo, geração de PDF, histórico/reabertura, login/logout,
-recuperação por e-mail e contato não foram executados: este ambiente não tem
-arquivo `.env`, Docker CLI, conta de teste ou credenciais SMTP. Nenhum dado ou
-resposta de API simulada foi usado para alegar esses testes.
+Uma verificação de interface interceptou as APIs (sem backend real): cálculo,
+comparativo, histórico e reabertura foram percorridos com médico (Fator R
+30%, Anexo III) e dentista (20%, Anexo V). O botão de PDF foi acionado, voltou
+ao estado habilitado e não exibiu erro, mas o navegador integrado não reportou
+um evento de download; portanto, o arquivo PDF e sua paginação não foram
+confirmados. Os mocks não comprovam persistência, autenticação ou envio real.
 
 ## Verificações locais
 
 - `npm run lint`: aprovado.
-- `npm run build`: aprovado; o Vite avisou que o bundle JavaScript minificado
-  excede 500 kB.
+- `npm run build`: aprovado; o bundle JavaScript minificado excede 500 kB.
 - `frontend/npm test`: 5 testes aprovados.
 - `backend/npm test`: 12 testes aprovados. Os testes de API de cálculo,
-  autenticação/recuperação e e-mail usam banco e/ou SMTP simulados; não
-  substituem os fluxos reais com conta, banco ou credenciais.
-- `npm ci` informou 20 vulnerabilidades nas dependências do frontend (1
-  crítica, 10 altas, 8 moderadas e 1 baixa); a instalação do backend informou
-  mais 6 (1 crítica, 2 altas e 3 moderadas). Elas não foram investigadas nem
-  corrigidas nesta atualização.
+  autenticação/recuperação e e-mail usam banco e/ou SMTP simulados.
+- Não foram executados fluxos reais com banco, conta de teste ou credenciais
+  SMTP: cálculo, geração/abertura de PDF, histórico/reabertura, login,
+  recuperação por e-mail ou contato. O logout foi verificado no navegador,
+  incluindo remoção do token e limpeza do formulário.
+- A instalação anterior informou vulnerabilidades de dependências; elas não
+  foram investigadas nem corrigidas nesta atualização.

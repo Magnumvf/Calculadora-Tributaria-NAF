@@ -18,7 +18,7 @@ export default function Navbar({ onLogout }) {
   const location = useLocation();
   const token = localStorage.getItem("token");
   const [menuAberto, setMenuAberto] = useState(false);
-  const [tema, setTema] = useTema();
+  const { tema, alternarTema } = useTema();
   const botaoMenuRef = useRef(null);
   const localizacaoAnterior = useRef(location.pathname);
 
@@ -65,11 +65,11 @@ export default function Navbar({ onLogout }) {
           aria-expanded={menuAberto}
           aria-controls="menu-principal"
           onClick={() => setMenuAberto((aberto) => !aberto)}
-          className={`${linkClass} border border-white/50 md:hidden`}
+          className={`${linkClass} border border-white/50 lg:hidden`}
         >
           {menuAberto ? "Fechar menu" : "Menu"}
         </button>
-        <div id="menu-principal" className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-1 md:flex md:w-auto md:flex-row md:flex-wrap md:items-center`}>
+        <div id="menu-principal" className={`${menuAberto ? "flex" : "hidden"} w-full flex-col gap-1 lg:flex lg:w-auto lg:flex-row lg:flex-wrap lg:items-center`}>
           {links.map(([path, label]) => (
             <NavLink key={path} to={path} end className={({ isActive }) => `${linkClass} ${isActive ? "bg-white/15 underline underline-offset-4" : ""}`}>
               {label}
@@ -86,7 +86,7 @@ export default function Navbar({ onLogout }) {
           <button
             type="button"
             aria-pressed={tema === "escuro"}
-            onClick={() => setTema((atual) => atual === "escuro" ? "claro" : "escuro")}
+            onClick={alternarTema}
             className={linkClass}
           >
             Tema {tema === "escuro" ? "escuro" : "claro"}

@@ -279,16 +279,16 @@ export default function Comparativo({ simulacao }) {
                 {erroPdf && <p role="alert" aria-live="assertive" className="text-sm font-medium text-naf-red">{erroPdf}</p>}
               </div>
 
-              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-gray-200 bg-white rounded-b-3xl">
+              <div className="px-6 md:px-8 pb-8 pt-6 border-t border-naf-line bg-naf-surface rounded-b-3xl">
                 <div className="text-center mb-4">
-                  <h4 className="font-bold text-[#132436] uppercase tracking-wider text-sm flex items-center justify-center gap-2">
-                    <svg className="w-5 h-5 text-[#CD371F]" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
+                  <h3 className="font-bold text-naf-ink uppercase tracking-wider text-sm flex items-center justify-center gap-2">
+                    <svg className="w-5 h-5 text-naf-alert" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" /></svg>
                     Conteúdo Recomendado Para Você
-                  </h4>
-                  <p className="text-sm text-gray-500">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
+                  </h3>
+                  <p className="text-sm text-naf-gray">Separamos este vídeo do Sebrae para te ajudar a entender melhor o regime {resultado.siglaVencedora}.</p>
                 </div>
                 
-                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-gray-200">
+                <div className="aspect-video w-full max-w-2xl mx-auto rounded-xl overflow-hidden shadow-lg border border-naf-line">
                   {resultado.siglaVencedora === 'PJ' ? (
                     <iframe className="w-full h-full" src="https://www.youtube.com/embed/yMlNDLDlk2c" title="Como funciona o Simples Nacional" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe>
                   ) : (
